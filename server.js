@@ -31,6 +31,21 @@ app.use((req, res, next) =>
   next();
 });
 
+///////////////////////////////////////////////////
+// For Heroku deployment
+
+// Server static assets if in production
+if (process.env.NODE_ENV === 'production') 
+{
+  // Set static folder
+  app.use(express.static('frontend/build'));
+
+  app.get('*', (req, res) => 
+ {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+  });
+}
+
 app.post('/api/addcard', async (req, res, next) =>
 {
   // incoming: userId, color
@@ -215,18 +230,3 @@ app.listen(PORT, () =>
 {
   console.log('Server listening on port ' + PORT);
 });
-
-///////////////////////////////////////////////////
-// For Heroku deployment
-
-// Server static assets if in production
-if (process.env.NODE_ENV === 'production') 
-{
-  // Set static folder
-  app.use(express.static('frontend/build'));
-
-  app.get('*', (req, res) => 
- {
-    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
-  });
-}
