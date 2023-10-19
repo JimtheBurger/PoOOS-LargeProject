@@ -153,7 +153,9 @@ app.post('/api/searchcards', async (req, res, next) =>
 });
 */
 
-app.listen(PORT, () => 
+const server = app.listen(PORT, () =>
 {
-  console.log('Server listening on port ' + PORT);
+  console.log("Server listening on port " + PORT);
 });
+
+module.exports = server; // allow testing script to access the server
