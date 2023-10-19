@@ -7,8 +7,6 @@ function Register()
     var email;
     var dob;
 
-    const [message,setMessage] = useState('');
-
     const app_name = 'cop4331-g4-ed21fec8c26b'
     function buildPath(route)
     {
@@ -67,7 +65,6 @@ function Register()
         <input type="submit" id="registerButton" class="buttons" value = "Do It"
           onClick={doRegister} />
         </form>
-        <span id="loginResult">{message}</span>
      </div>
     );
 };
