@@ -48,33 +48,37 @@ if (process.env.NODE_ENV === 'production')
   });
 }
 
-/*
-app.post('/api/addcard', async (req, res, next) =>
+app.post('/api/addGame', async(req, res, next) =>
 {
-  // incoming: userId, color
-  // outgoing: error
-	
-  const { userId, card } = req.body;
+  //  incoming: title, year, developer, publisher
+  //  outgoing: error
 
-  const newCard = {Card:card,UserId:userId};
-  var error = '';
+  let error = '';
+
+  const { title, year, developer, publisher } = req.body;
+  const newGame = {Title:title, Year:year, Developer:developer, Publisher:publisher};
 
   try
   {
     const db = client.db('COP4331Cards');
-    const result = db.collection('Cards').insertOne(newCard);
+    const doesGameAlreadyExist = await db.collection('Games').find({ Title: title }).toArray();
+    if (doesGameAlreadyExist.length > 0)
+    {
+      error = `There already exists a game with the title '${title}'`;
+    }
+    else
+    {
+      const result = db.collection('Games').insertOne(newGame);
+    }
   }
   catch(e)
   {
     error = e.toString();
   }
 
-  cardList.push( card );
-
   var ret = { error: error };
   res.status(200).json(ret);
 });
-*/
 
 app.post('/api/login', async (req, res, next) => 
 {
