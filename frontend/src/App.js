@@ -7,9 +7,6 @@ import CardPage from './pages/CardPage';
 
 function App() {
   return (
-    <div>
-      hey its working
-    </div>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
