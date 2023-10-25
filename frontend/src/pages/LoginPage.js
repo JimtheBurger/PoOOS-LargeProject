@@ -1,6 +1,6 @@
 import React from 'react';
 
-import LoginNavbar from '../components/LoginNavbar/loginNavbar';
+import LoginNavbar from '../components/LoginNavbar/LoginNavbar';
 import Login from '../components/Login';
 import Register from '../components/Register';
 
