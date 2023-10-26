@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './NavbarStyles.css'
+
 function LoginNavbar()
 {
    return(
