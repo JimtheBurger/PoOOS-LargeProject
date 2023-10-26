@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './NavbarStyles.css'
+import './LoginNavbarStyles.css'
 
 function LoginNavbar()
 {
