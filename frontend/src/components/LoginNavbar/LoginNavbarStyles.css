@@ -1,17 +1,94 @@
-.navbar {
-    width: 100%;
-    height: 80px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 1rem;
-    z-index: 2;
-}
+@font-face {
+    font-family: 'Goldman-Regular';
+    src: url('../../../public/Goldman-Regular.ttf') format('woff2'), /* Modern Browsers */
+         url('../../../public/Goldman-Regular.ttf') format('woff'); /* Legacy Browsers */
+    font-weight: 400;
+    font-style: normal;
+  }
 
-.nav-menu {
-    display: flex;
-}
-
-li {
-    padding: 0 1rem;
-}
+.nav {
+    background-color: #130433;
+    height: 75px;
+    width: 1920px;
+  }
+  
+  .nav .nav-text {
+    height: 36px;
+    left: 190px;
+    position: relative;
+    top: 19px;
+    width: 1073px;
+  }
+  
+  .nav .my-steam-list {
+    color: #ffffff;
+    font-family: "Goldman-Regular", Helvetica;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 400;
+    left: 0;
+    letter-spacing: var(--nav-title-letter-spacing);
+    line-height: var(--nav-title-line-height);
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 205px;
+  }
+  
+  .nav .text-wrapper {
+    color: #ffffff;
+    font-family: "Goldman-Regular", Helvetica;
+    font-size: 24px;
+    font-style: var(--nav-normal-font-style);
+    font-weight: var(--nav-normal-font-weight);
+    left: 1160px;
+    letter-spacing: var(--nav-normal-letter-spacing);
+    line-height: var(--nav-normal-line-height);
+    position: absolute;
+    text-align: center;
+    top: 3px;
+    width: 78px;
+  }
+  
+  .nav .div {
+    color: #ffffff;
+    font-family: "Goldman-Regular", Helvetica;
+    font-size: 24px;
+    font-weight: 400;
+    left: 1285px;
+    letter-spacing: -0.6px;
+    line-height: normal;
+    position: absolute;
+    text-align: center;
+    top: 3px;
+    width: 100px;
+  }
+  
+  .nav .text-wrapper-2 {
+    color: #ffffff;
+    font-family: "Goldman-Regular", Helvetica;
+    font-size: 24px;
+    font-weight: 400;
+    left: 1540px;
+    letter-spacing: -0.6px;
+    line-height: normal;
+    position: absolute;
+    text-align: center;
+    top: 3px;
+    width: 95px;
+  }
+  
+  .nav .text-wrapper-3 {
+    color: #ffffff;
+    font-family: "Goldman-Regular", Helvetica;
+    font-size: 24px;
+    font-weight: 400;
+    left: 1440px;
+    letter-spacing: -0.6px;
+    line-height: normal;
+    position: absolute;
+    text-align: center;
+    top: 3px;
+    width: 63px;
+  }
+  
