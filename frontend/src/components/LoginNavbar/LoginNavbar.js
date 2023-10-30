@@ -14,18 +14,16 @@ function LoginNavbar()
        navigate('/register');
    }
    return(
-      <div className='navbar'>
-         <div className="logo">
-            <h2>MySteamList</h2>
-         </div>
-         <ul className="nav-menu">
-            <li>Home</li>
-            <li>About</li>
-            <li>GitHub</li>
-            <li onClick={navigateLogin}>Login </li>
-            <li onClick={navigateRegister}>Sign-Up </li>
-         </ul>
+      <div className="nav">
+      <div className="nav-text">
+        <div className="my-steam-list">Mysteamlist</div>
+        <div className="text-wrapper">about</div>
+        <div className="div">browse</div>
+        <div className="text-wrapper-2" onClick={navigateRegister}>sign up</div>
+        <div className="text-wrapper-3" onClick={navigateLogin}>login</div>
       </div>
+    </div>
+      
    );
 };
 
