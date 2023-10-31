@@ -16,6 +16,10 @@ li {
   padding: 0 1rem;
 }
 
+li :hover{
+  cursor: pointer;
+}
+
 .hamburger {
   display: none;
   /* padding: 1rem; */
