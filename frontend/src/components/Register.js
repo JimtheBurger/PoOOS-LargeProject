@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "./register.css";
 
 function Register()
 {
@@ -49,23 +50,24 @@ function Register()
             return;
         }    
     };
-
     return(
-      <div id="registerDiv">
-        <form onSubmit={doRegister}>
-        <span id="inner-title">REGISTER HERE</span><br />
-        <input type="text" id="registerName" placeholder="Username" 
-            ref={(c) => username = c} />
-        <input type="password" id="registerPassword" placeholder="Password" 
-            ref={(c) => password = c} />
-        <input type="text" id="registerEmail" placeholder="Email" 
-            ref={(c) => email = c} />
-        <input type="text" id="registerDOB" placeholder="Date of Birth (xx/xx/xxxx)" 
-            ref={(c) => dob = c} />
-        <input type="submit" id="registerButton" class="buttons" value = "Do It"
-          onClick={doRegister} />
-        </form>
-     </div>
+        <div id="registerDiv">
+        <div className="box">
+            <form onSubmit={doRegister}>
+                <span id="signup-title">SIGN UP</span><br />
+                <input type="text" id="registerName" placeholder="Username" 
+                    ref={(c) => username = c} />
+                <input type="password" id="registerPassword" placeholder="Password" 
+                    ref={(c) => password = c} />
+                <input type="text" id="registerEmail" placeholder="Email" 
+                    ref={(c) => email = c} />
+                <input type="text" id="registerDOB" placeholder="Date of Birth (xx/xx/xxxx)" 
+                    ref={(c) => dob = c} />
+                <input type="submit" id="registerButton" class="buttons" value = "Sign Up"
+                    onClick={doRegister} />
+            </form>
+        </div>
+        </div>
     );
 };
 
