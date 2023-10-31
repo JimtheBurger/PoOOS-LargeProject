@@ -40,8 +40,8 @@ function LoginNavbar()
         <ul className="mobile-nav">
           <li>About</li>
           <li>Browse</li>
-          <li>Login</li>
-          <li>Register</li>
+          <li onClick={navigateLogin}>Login</li>
+          <li onClick={navigateRegister}>Register</li>
         </ul>
         <div className="mobile-menu-bottom">
           <div className="menu-icons">
