@@ -2,7 +2,6 @@ import React from 'react';
 
 import LoginNavbar from '../components/LoginNavbar/LoginNavbar';
 import Login from '../components/Login';
-import Register from '../components/Register';
 
 const LoginPage = () =>
 {
@@ -11,7 +10,6 @@ const LoginPage = () =>
       <div>
         <LoginNavbar />
         <Login />
-        <Register />
       </div>
     );
 };
