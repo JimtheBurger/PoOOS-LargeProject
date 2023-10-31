@@ -31,6 +31,15 @@ h2 {
   padding: 0 1rem;
 }
 
+button {
+  border: 1px solid;
+  color: #fff;
+  padding: .7rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Kanit', sans-serif;
+}
+
 @media screen and (max-width: 940px) {
   h1 {
     font-size: 2.5rem;
