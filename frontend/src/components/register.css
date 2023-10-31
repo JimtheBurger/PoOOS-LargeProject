@@ -9,11 +9,17 @@
     background-color: #ffffff;
     border-radius: 5px;
     box-shadow: 4px 4px 8px #00061d80;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center; /* Center text horizontally */
 }
 
 #signup-title {
     font-family: "Goldman-Regular", Helvetica;
     font-size: 30px;
+    margin-bottom: 20px;
 }
 
 #registerName,
@@ -23,5 +29,4 @@
     margin: 10px auto;
     padding: 10px;
     box-sizing: border-box;
-    text-align: center;
 }
