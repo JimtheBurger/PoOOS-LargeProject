@@ -41,7 +41,7 @@ function Register()
             }
             else
             {
-                alert('User has been added');
+                /*alert('User has been added');*/
             }
         }
         catch(e)
@@ -51,22 +51,17 @@ function Register()
         }    
     };
     return(
-        <div id="registerDiv">
-        <div className="box">
-            <form onSubmit={doRegister}>
-                <span id="signup-title">SIGN UP</span><br />
-                <input type="text" id="registerName" placeholder="Username" 
-                    ref={(c) => username = c} />
-                <input type="password" id="registerPassword" placeholder="Password" 
-                    ref={(c) => password = c} />
-                <input type="text" id="registerEmail" placeholder="Email" 
-                    ref={(c) => email = c} />
-                <input type="text" id="registerDOB" placeholder="Date of Birth (xx/xx/xxxx)" 
-                    ref={(c) => dob = c} />
-                <input type="submit" id="registerButton" class="buttons" value = "Sign Up"
-                    onClick={doRegister} />
-            </form>
-        </div>
+        <div className="Register">
+            <div className="content">
+                <h1>Sign Up</h1>
+                <form className="form">
+                    <input type="text" id="registerName" placeholder="Username" ref={(c) => username = c} />
+                    <input type="password" id="registerPassword" placeholder="Password" ref={(c) => password = c} />
+                    <input type="text" id="registerEmail" placeholder="Email" ref={(c) => email = c} />
+                    <input type="text" id="registerDOB" placeholder="Date of Birth (xx/xx/xxxx)" ref={(c) => dob = c} />
+                    <button type="button" onClick={doRegister}>Sign Up</button>
+                </form>
+            </div>
         </div>
     );
 };
