@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useRef } from "react";
 import "./register.css";
 
 function Register()
@@ -20,7 +19,9 @@ function Register()
         {        
             return 'http://localhost:5000/' + route;
         }
-    }    
+    }
+
+    const [message, setMessage] = useState('');
 
     const doRegister = async event => 
     {
@@ -28,7 +29,6 @@ function Register()
 
         var obj = {username:username.value, password:password.value, email:email.value, dob:dob.value};
         var js = JSON.stringify(obj);
-        const registerResult = useRef(null);
 
         try
         {    
@@ -39,19 +39,22 @@ function Register()
 
             if( res.error.length > 0 )
             {
-                registerResult.current = "API Error:" + res.error;
+                setMessage("API Error:" + res.error);
             }
             else
             {
-                registerResult = 'User has been added';
+                setMessage(registerResult = 'User has been added');
             }
         }
         catch(e)
         {
-            registerResult = e.toString();
+            setMessage(e.toString());
             return;
         }    
     };
+
+
+
     return(
         <div className="Register">
             <div className="content">
@@ -74,7 +77,7 @@ function Register()
                         <input type="text" id="registerDOB" placeholder="Date of Birth (xx/xx/xxxx)" ref={(c) => dob = c} />
                     </div>
                     <button type="button" className="registerButton" onClick={doRegister}>Sign Up</button>
-                    <p ref={registerResult}></p>
+                    <p>{message}</p>
                 </form>
             </div>
         </div>
