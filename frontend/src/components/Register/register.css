@@ -30,11 +30,24 @@
     border-radius: 5px;
 }
 
-.form .label {
-    justify-content: left;
-}
-
 .registerInput {
     margin-bottom: 15px;
-}
+    font-family: 'Exo';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 40px;
+    /* identical to box height, or 200% */
 
+    color: #000000;
+    box-sizing: border-box;
+    
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 60px;
+    background: #FFFFFF;
+    border: 1px solid #E2E1E5;
+    border-radius: 5px;
+}
