@@ -1,4 +1,4 @@
-.Register .content {
+.Register {
     position: absolute;
     top: 0;
     height: 100%;
@@ -11,3 +11,22 @@
     padding: 1rem;
     z-index: 0;
 }
+
+.content {
+    display: flex;
+    background-color: #ffffffcc;
+    color: #000;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #cccc;
+    padding: 4px;
+    border-radius: 8px;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.registerInput {
+    margin-bottom: 15px;
+}
+
