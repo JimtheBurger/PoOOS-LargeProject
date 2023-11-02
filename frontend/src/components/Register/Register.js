@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import "./register.css";
 
+var result = document.getElementById('registerResult');
+
 function Register()
 {
     var username;
@@ -37,16 +39,16 @@ function Register()
 
             if( res.error.length > 0 )
             {
-                alert( "API Error:" + res.error );
+                result.innerText = "API Error:" + res.error;
             }
             else
             {
-                /*alert('User has been added');*/
+                result.innerText = 'User has been added';
             }
         }
         catch(e)
         {
-            alert(e.toString());
+            result.innerText = e.toString();
             return;
         }    
     };
