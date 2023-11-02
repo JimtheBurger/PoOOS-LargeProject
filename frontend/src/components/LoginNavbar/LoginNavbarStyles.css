@@ -3,6 +3,7 @@
   height: 80px;
   display: flex;
   justify-content: space-between;
+  position: absolute;
   align-items: center;
   padding: 0 1rem;
   z-index: 2;
