@@ -43,7 +43,7 @@ function Register()
             }
             else
             {
-                setMessage(registerResult = 'User has been added');
+                setMessage('User has been added');
             }
         }
         catch(e)
