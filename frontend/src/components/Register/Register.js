@@ -56,19 +56,19 @@ function Register()
                 <h1>Sign Up</h1>
                 <form className="form">
                     <div className="registerInput">
-                        <label>Username</label>
+                        <label>Username</label><br/>
                         <input type="text" id="registerName" placeholder="Username" ref={(c) => username = c} />
                     </div>
                     <div className="registerInput">
-                        <label>Password</label>
+                        <label>Password</label><br/>
                         <input type="password" id="registerPassword" placeholder="Password" ref={(c) => password = c} />
                     </div>
                     <div className="registerInput">
-                        <label>Email</label>
+                        <label>Email</label><br/>
                         <input type="text" id="registerEmail" placeholder="Email" ref={(c) => email = c} />
                     </div>
                     <div className="registerInput">
-                        <label>Date of Birth</label>
+                        <label>Date of Birth</label><br/>
                         <input type="text" id="registerDOB" placeholder="Date of Birth (xx/xx/xxxx)" ref={(c) => dob = c} />
                     </div>
                     <button type="button" className="registerButton" onClick={doRegister}>Sign Up</button>
