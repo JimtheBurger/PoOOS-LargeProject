@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
+import { useRef } from "react";
 import "./register.css";
-
-var result = document.getElementById('registerResult');
 
 function Register()
 {
@@ -29,6 +28,7 @@ function Register()
 
         var obj = {username:username.value, password:password.value, email:email.value, dob:dob.value};
         var js = JSON.stringify(obj);
+        const registerResult = useRef(null);
 
         try
         {    
@@ -39,16 +39,16 @@ function Register()
 
             if( res.error.length > 0 )
             {
-                result.innerText = "API Error:" + res.error;
+                registerResult.current = "API Error:" + res.error;
             }
             else
             {
-                result.innerText = 'User has been added';
+                registerResult = 'User has been added';
             }
         }
         catch(e)
         {
-            result.innerText = e.toString();
+            registerResult = e.toString();
             return;
         }    
     };
@@ -74,7 +74,7 @@ function Register()
                         <input type="text" id="registerDOB" placeholder="Date of Birth (xx/xx/xxxx)" ref={(c) => dob = c} />
                     </div>
                     <button type="button" className="registerButton" onClick={doRegister}>Sign Up</button>
-                    <p id="registerResult"></p>
+                    <p ref={registerResult}></p>
                 </form>
             </div>
         </div>
