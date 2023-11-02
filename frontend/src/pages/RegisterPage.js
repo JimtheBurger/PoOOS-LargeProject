@@ -1,5 +1,5 @@
 import React from 'react';
-import Register from '../components/Register';
+import Register from '../components/Register/Register';
 import LoginNavbar from '../components/LoginNavbar/LoginNavbar';
 
 const RegisterPage = () =>
