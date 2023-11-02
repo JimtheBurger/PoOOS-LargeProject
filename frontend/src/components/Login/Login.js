@@ -58,15 +58,17 @@ function Login()
     return(
       <div className="Login">
         <div className="content">
-            <h1>Login in</h1>
+            <h1>Login</h1>
             <form className="form">
+                <label>Username</label>
                 <div className="loginInput">
                     <input type="text" id="loginName" placeholder="Username" ref={(c) => loginName = c} />
                 </div>
+                <label>Password</label>
                 <div className="loginInput">
                     <input type="password" id="loginPassword" placeholder="Password" ref={(c) => loginPassword = c} />
                 </div>
-                <button type="button" className="loginButton" onClick={doLogin}>Login in</button>
+                <button type="button" className="loginButton" onClick={doLogin}>Login</button>
                 <p id="loginResult"></p>
             </form>
         </div>
