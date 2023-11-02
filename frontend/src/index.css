@@ -33,7 +33,8 @@ h2 {
 
 button {
   border: 1px solid;
-  color: greenyellow;
+  color: #fff;
+  background-color: greenyellow;
   padding: .7rem 1.5rem;
   border-radius: 8px;
   cursor: pointer;
