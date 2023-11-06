@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
+const axios = require('axios');
 const path = require("path");
 
 require('dotenv').config();
@@ -129,6 +129,29 @@ app.post('/api/register', async(req, res, next) =>
 
   var ret = { error: error };
   res.status(200).json(ret);
+});
+
+// hijack steam's api to get information for a game based on its appid
+// (this is just a wrapper for steam's api for now)
+app.post("/api/gamedetails", async (req, res, next) => {
+    // TODO: figure out a way to find an appid based on game title
+    // here are some sample appid's for testing:
+    // terraria:  105600
+    // celeste:   504230
+    // cyberpunk: 1091500
+
+    const { appid } = req.body;
+    const steam_api_url = `https://store.steampowered.com/api/appdetails?appids=${appid}`;
+    axios
+        .get(steam_api_url, {
+            "Accept-Language": "en-US",
+        })
+        .then((appinfo) => {
+            res.status(200).json(appinfo.data[appid]);
+        })
+        .catch((err) => {
+            console.log("Error: ", err.message);
+        });
 });
 
 /*
