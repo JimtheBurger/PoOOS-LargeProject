@@ -48,38 +48,6 @@ if (process.env.NODE_ENV === 'production')
   });
 }
 
-app.post('/api/addGame', async(req, res, next) =>
-{
-  //  incoming: title, year, developer, publisher
-  //  outgoing: error
-
-  let error = '';
-
-  const { title, year, developer, publisher } = req.body;
-  const newGame = {Title:title, Year:year, Developer:developer, Publisher:publisher};
-
-  try
-  {
-    const db = client.db('COP4331Cards');
-    const doesGameAlreadyExist = await db.collection('Games').find({ Title: title }).toArray();
-    if (doesGameAlreadyExist.length > 0)
-    {
-      error = `There already exists a game with the title '${title}'`;
-    }
-    else
-    {
-      const result = db.collection('Games').insertOne(newGame);
-    }
-  }
-  catch(e)
-  {
-    error = e.toString();
-  }
-
-  var ret = { error: error };
-  res.status(200).json(ret);
-});
-
 app.post('/api/login', async (req, res, next) => 
 {
   // incoming: login, password
@@ -133,7 +101,7 @@ app.post('/api/register', async(req, res, next) =>
 
 // hijack steam's api to get information for a game based on its appid
 // (this is just a wrapper for steam's api for now)
-app.post("/api/gamedetails", async (req, res, next) => {
+app.post("/api/gameDetails", async (req, res, next) => {
     // TODO: figure out a way to find an appid based on game title
     // here are some sample appid's for testing:
     // terraria:  105600
@@ -152,6 +120,90 @@ app.post("/api/gamedetails", async (req, res, next) => {
         .catch((err) => {
             console.log("Error: ", err.message);
         });
+});
+
+app.post('/api/addGameToList', async(req, res, next) =>
+{
+  //  incoming: userId, appId, listId (optional - if listId is omitted, create a new list)
+  //  outgoing: error
+
+  const { userId, appId, listId } = req.body;
+
+  let error = '';
+  let newList;
+
+  const db = client.db('COP4331Cards');
+
+  if (listId) {
+    newList = { UserId: userId, ListId: "" + listId, AppId: appId };
+  } else {
+
+    // find the next available listId (this is terrible💀💀💀)
+    const cursor = db.collection('Lists').find().sort({ ListId: -1 })
+    let maxListId;
+    for await (const doc of cursor) {
+      maxListId = doc.ListId;
+      break;
+    }
+
+    newList = { UserId: userId, ListId: "" + (parseInt(maxListId) + 1), AppId: appId };
+  }
+
+  try
+  {
+    const result = db.collection('Lists').insertOne(newList);
+  }
+  catch(e)
+  {
+    error = e.toString();
+  }
+
+  const ret = { error: error };
+  res.status(200).json(ret);
+});
+
+app.post('/api/getListById', async(req, res, next) =>
+{
+  //  incoming: listId
+  //  outgoing: error, lists
+
+  const { listId } = req.body;
+
+  let error = '';
+
+  const db = client.db('COP4331Cards');
+  const results = await db.collection('Lists').find({ "ListId": listId } ).toArray();
+  
+  var _ret = [];
+  for( var i=0; i<results.length; i++ )
+  {
+    _ret.push( results[i] );
+  }
+  
+  var ret = {results:_ret, error:error};
+  res.status(200).json(ret);
+});
+
+app.post('/api/getListsByUserId', async(req, res, next) =>
+{
+  //  incoming: userId
+  //  outgoing: error, lists
+
+  const { userId } = req.body;
+
+  let error = '';
+
+  const db = client.db('COP4331Cards');
+  const results = await db.collection('Lists').find({ "UserId": userId } ).toArray();
+  
+  var _ret = [];
+  for( var i=0; i<results.length; i++ )
+  {
+    _ret.push( results[i] );
+  }
+  
+  var ret = {results:_ret, error:error};
+  res.status(200).json(ret);
 });
 
 /*
