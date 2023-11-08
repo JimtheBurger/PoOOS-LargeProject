@@ -132,25 +132,25 @@ app.post('/api/addGameToList', async(req, res, next) =>
   let error = '';
   let newList;
 
-  const db = client.db('COP4331Cards');
-
-  if (listId) {
-    newList = { UserId: userId, ListId: "" + listId, AppId: appId };
-  } else {
-
-    // find the next available listId (this is terrible💀💀💀)
-    const cursor = db.collection('Lists').find().sort({ ListId: -1 })
-    let maxListId;
-    for await (const doc of cursor) {
-      maxListId = doc.ListId;
-      break;
-    }
-
-    newList = { UserId: userId, ListId: "" + (parseInt(maxListId) + 1), AppId: appId };
-  }
-
   try
   {
+    const db = client.db('COP4331Cards');
+
+    if (listId) {
+      newList = { UserId: userId, ListId: "" + listId, AppId: appId };
+    } else {
+
+      // find the next available listId (this is terrible💀💀💀)
+      const cursor = db.collection('Lists').find().sort({ ListId: -1 })
+      let maxListId;
+      for await (const doc of cursor) {
+        maxListId = doc.ListId;
+        break;
+      }
+
+      newList = { UserId: userId, ListId: "" + (parseInt(maxListId) + 1), AppId: appId };
+    }
+
     const result = db.collection('Lists').insertOne(newList);
   }
   catch(e)
@@ -171,13 +171,16 @@ app.post('/api/getListById', async(req, res, next) =>
 
   let error = '';
 
-  const db = client.db('COP4331Cards');
-  const results = await db.collection('Lists').find({ "ListId": listId } ).toArray();
-  
-  var _ret = [];
-  for( var i=0; i<results.length; i++ )
-  {
-    _ret.push( results[i] );
+  try {
+    const db = client.db('COP4331Cards');
+    const results = await db.collection('Lists').find({ "ListId": listId }).toArray();
+    
+    var _ret = [];
+    for (var i = 0; i < results.length; i++) {
+      _ret.push(results[i]);
+    }
+  } catch (e) {
+    error = e;
   }
   
   var ret = {results:_ret, error:error};
@@ -193,15 +196,18 @@ app.post('/api/getListsByUserId', async(req, res, next) =>
 
   let error = '';
 
-  const db = client.db('COP4331Cards');
-  const results = await db.collection('Lists').find({ "UserId": userId } ).toArray();
-  
-  var _ret = [];
-  for( var i=0; i<results.length; i++ )
-  {
-    _ret.push( results[i] );
+  try {
+    const db = client.db('COP4331Cards');
+    const results = await db.collection('Lists').find({ "UserId": userId } ).toArray();
+    
+    var _ret = [];
+    for( var i=0; i<results.length; i++ )
+    {
+      _ret.push( results[i] );
+    }
+  } catch (e) {
+    error = e;
   }
-  
   var ret = {results:_ret, error:error};
   res.status(200).json(ret);
 });
