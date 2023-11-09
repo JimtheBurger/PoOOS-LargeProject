@@ -122,6 +122,30 @@ app.post("/api/gameDetails", async (req, res, next) => {
         });
 });
 
+app.post("/api/getSteamGames", async (req, res, next) =>
+{
+  // outgoing: games
+
+  let error = '';
+
+  try
+  {
+    const db = client.db('COP4331Cards');
+    const api_url = 'http://api.steampowered.com/ISteamApps/GetAppList/v0002';
+
+    const list = await axios.get(api_url);
+
+    db.collection('Games').insertMany(list);
+  }
+  catch(e)
+  {
+    error = e.toString()
+  }
+
+  const ret = { error: error };
+  res.status(200).json(ret);
+});
+
 app.post('/api/addGameToList', async(req, res, next) =>
 {
   //  incoming: userId, appId, listId (optional - if listId is omitted, create a new list)
