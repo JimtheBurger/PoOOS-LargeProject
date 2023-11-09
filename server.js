@@ -122,6 +122,8 @@ app.post("/api/gameDetails", async (req, res, next) => {
         });
 });
 
+
+//gets the json from the steam web api and adds the games into the 'Games' collection
 app.post("/api/getSteamGames", async (req, res, next) =>
 {
   // outgoing: games
@@ -135,7 +137,7 @@ app.post("/api/getSteamGames", async (req, res, next) =>
 
     const list = await axios.get(api_url);
 
-    db.collection('Games').insertMany(list);
+    error = list;
   }
   catch(e)
   {
