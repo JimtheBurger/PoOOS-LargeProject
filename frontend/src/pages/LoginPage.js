@@ -1,17 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import LoginNavbar from '../components/LoginNavbar/LoginNavbar';
-import Login from '../components/Login/Login';
+import HookLogin from "../components/Forms/HookLogin";
+import TopNav from "../components/TopNav/TopNav";
 
-const LoginPage = () =>
-{
-
-    return(
-      <div>
-        <LoginNavbar />
-        <Login />
-      </div>
-    );
+const LoginPage = () => {
+  return (
+    <div>
+      <TopNav />
+      <HookLogin />
+    </div>
+  );
 };
 
 export default LoginPage;

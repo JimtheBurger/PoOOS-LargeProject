@@ -1,17 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import LoginNavbar from '../components/LoginNavbar/LoginNavbar';
-import Register from '../components/Register/Register';
+import HookRegister from "../components/Forms/HookRegister";
+import TopNav from "../components/TopNav/TopNav";
 
-const RegisterPage = () =>
-{
-
-    return(
-      <div>
-        <LoginNavbar />
-        <Register />
-      </div>
-    );
+const RegisterPage = () => {
+  return (
+    <div>
+      <TopNav />
+      <HookRegister />
+    </div>
+  );
 };
 
 export default RegisterPage;
