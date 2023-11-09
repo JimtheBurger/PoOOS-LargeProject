@@ -138,7 +138,7 @@ app.post("/api/getSteamGames", async (req, res, next) =>
 
     axios.get(api_url)
       .then(response => {
-        result = response;
+        res.status(200).json(response);
       })
       .catch(error =>{
         console.log(error);
@@ -147,10 +147,10 @@ app.post("/api/getSteamGames", async (req, res, next) =>
   catch(e)
   {
     error = e.toString()
+    const ret = { error: error };
+    res.status(200).json(ret);
   }
 
-  const ret = { result: result, error: error };
-  res.status(200).json(ret);
 });
 
 app.post('/api/addGameToList', async(req, res, next) =>
