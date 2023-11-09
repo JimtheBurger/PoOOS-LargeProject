@@ -129,22 +129,23 @@ app.post("/api/getSteamGames", async (req, res, next) =>
   // outgoing: games
 
   let error = '';
+  let result;
 
   try
   {
     const db = client.db('COP4331Cards');
-    const api_url = 'http://api.steampowered.com/ISteamApps/GetAppList/v0002';
+    const api_url = 'https://api.steampowered.com/ISteamApps/GetAppList/v2/';
 
-    const list = await axios.get(api_url);
+    const list = await axios.get(api_url).applist.apps;
 
-    error = list;
+    result = list;
   }
   catch(e)
   {
     error = e.toString()
   }
 
-  const ret = { error: error };
+  const ret = { result: result, error: error };
   res.status(200).json(ret);
 });
 
