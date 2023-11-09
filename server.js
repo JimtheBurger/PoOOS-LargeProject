@@ -136,9 +136,13 @@ app.post("/api/getSteamGames", async (req, res, next) =>
     const db = client.db('COP4331Cards');
     const api_url = 'https://api.steampowered.com/ISteamApps/GetAppList/v2/';
 
-    const list = await axios.get(api_url).applist.apps;
-
-    result = list;
+    axios.get(api_url)
+      .then(response => {
+        result = response;
+      })
+      .catch(error =>{
+        console.log(error);
+      })
   }
   catch(e)
   {
