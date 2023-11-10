@@ -334,7 +334,7 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
         'Client-ID': 'nolwnm8zi98nzj7l2mf2pnskfxptys',
         'Authorization': 'Bearer hfaejots18whj2h99lt5xp40h5hgpn',
       },
-      body: `fields name; search "${name}";`
+      body: `fields name;`
   })
     .then(response => {
       console.log(response);
