@@ -325,21 +325,22 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
 
   const { name, CLIENT_ID, ACCESS_TOKEN } = req.body;
   const api_url = `https://api.igdb.com/v4/games`;
-  axios.post(api_url, {
+
+  fetch(
+    api_url,
+    { method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Client-ID': CLIENT_ID,
         'Authorization': 'Bearer ' + ACCESS_TOKEN,
-      }, 
-
-      body: `fields name; search "${name}";`
-
+      },
+      body: `fields name; search ${name};`
+  })
+    .then(response => {
+      res.status(200).json(response);
     })
-    .then((response) => {
-      res.status(200).json(response.json());
-    })
-    .catch((err) => {
-      console.log("Error: ", err.message);
+    .catch(err => {
+        console.error(err);
     });
 });
 
