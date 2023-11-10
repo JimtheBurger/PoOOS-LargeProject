@@ -337,7 +337,7 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
       body: `fields name; search "${name}";`
   })
     .then(response => {
-      res.status(200).json(response);
+      res.status(200).json(response.json());
     })
     .catch(err => {
         console.error(err);
