@@ -319,6 +319,53 @@ app.post("/api/gamedetails", async (req, res, next) => {
     });
 });
 
+app.post("/api/searchGamesIGDB", async (req, res, next) => {
+  //incoming: name, CLIENT_ID, ACCESS_TOKEN
+  //outgoing: id, name
+
+  const { name, CLIENT_ID, ACCESS_TOKEN } = req.body;
+  const api_url = `https://api.igdb.com/v4/games`;
+  axios.post(api_url, {
+      headers: {
+        'Accept': 'application/json',
+        'Client-ID': CLIENT_ID,
+        'Authorization': 'Bearer ' + ACCESS_TOKEN,
+      }, 
+
+      body: `fields name; search "${name}";`
+
+    })
+    .then((response) => {
+      res.status(200).json(response.json());
+    })
+    .catch((err) => {
+      console.log("Error: ", err.message);
+    });
+});
+
+app.post("/api/searchSteamID", async (req, res, next) => {
+  //incoming: IGDB_ID, CLIENT_ID, ACCESS_TOKEN
+  //outgoing: STEAM_ID
+
+  const { IGDB_ID, CLIENT_ID, ACCESS_TOKEN } = req.body;
+  const api_url = `https://api.igdb.com/v4/websites`;
+  axios.post(api_url, {
+      headers: {
+        'Accept': 'application/json',
+        'Client-ID': CLIENT_ID,
+        'Authorization': 'Bearer ' + ACCESS_TOKEN,
+      }, 
+
+      body: `fields game, url; where game = ${IGDB_ID} & category = 13;`
+
+    })
+    .then((response) => {
+      res.status(200).json(response.json());
+    })
+    .catch((err) => {
+      console.log("Error: ", err.message);
+    });
+});
 /*
 app.post('/api/searchcards', async (req, res, next) => 
 {
