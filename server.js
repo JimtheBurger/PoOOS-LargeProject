@@ -325,7 +325,7 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
 
   const { GAME_NAME, CLIENT_ID, ACCESS_TOKEN } = req.body;
   const api_url = "https://api.igdb.com/v4/games";
-  var ret = { url: api_url };
+  
 
   fetch(
     "https://api.igdb.com/v4/games",
@@ -342,7 +342,8 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
 
     }).then(response => {
       console.log(response);
-      return res.status(200).json(response);
+      var ret = { url: api_url, response: response};
+      return res.status(200).json(ret);
     }).catch(err => {
       console.log(err);
     });
