@@ -5,6 +5,7 @@ const cors = require("cors");
 const axios = require("axios");
 const path = require("path");
 const crypto = require("crypto");
+const igdb = require('igdb-api-node');
 
 //Environment Variables
 require("dotenv").config();
@@ -323,30 +324,25 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   //incoming: name, CLIENT_ID, ACCESS_TOKEN
   //outgoing: id, name
 
-  const { GAME_NAME, CLIENT_ID, ACCESS_TOKEN } = req.body;
-  const api_url = "https://api.igdb.com/v4/games";
-  
+  const { GAME_NAME } = req.body;
+  const client = igdb('nolwnm8zi98nzj7l2mf2pnskfxptys', 'r537v37gn9njuov7pj4ziizfnpolo0');
+  let error = '';
 
-  fetch(
-    "https://api.igdb.com/v4/games",
-    {
-      method: 'POST',
-      mode: 'no-cors',
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json',
-        'Client-ID': `${CLIENT_ID}`,
-        'Authorization': `Bearer ${ACCESS_TOKEN}`
-      },
-      body: `fields name; limit 10;`,
+  try{
+    const response = await igdb()
+      .fields('name')
+      .search(GAME_NAME)
+      .request('/games');
 
-    }).then(response => {
-      console.log(response.data);
-      var ret = { url: api_url, response: response.data};
-      return res.status(200).json(ret);
-    }).catch(err => {
-      console.log(err);
-    });
+    var ret = {response: response, error: error};
+  }
+  catch(err){
+    console.log(err);
+    error = err;
+    var ret = {error:error};    
+  }
+
+  res.status(200).json(ret);
 });
 
 app.post("/api/searchSteamID", async (req, res, next) => {
