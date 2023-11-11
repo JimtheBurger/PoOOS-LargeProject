@@ -341,8 +341,8 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
       body: `fields name; limit 10;`,
 
     }).then(response => {
-      console.log(response);
-      var ret = { url: api_url, response: response};
+      console.log(response.data);
+      var ret = { url: api_url, response: response.data};
       return res.status(200).json(ret);
     }).catch(err => {
       console.log(err);
