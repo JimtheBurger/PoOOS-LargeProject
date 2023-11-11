@@ -334,10 +334,10 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
         'Client-ID': `${CLIENT_ID}`,
         'Authorization': `Bearer ${ACCESS_TOKEN}`
       }, 
-      body: `fields name; search ${GAME_NAME}; limit 10;`
+      body: `fields name; search "${GAME_NAME}"; limit 10;`
   })
     .then(response => {
-      res.status(200).json(response.data.json());
+      res.status(200).json(response.data);
     })
     .catch(err => {
         console.error(err);
