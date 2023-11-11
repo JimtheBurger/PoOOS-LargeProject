@@ -338,7 +338,7 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
         'Client-ID': `${CLIENT_ID}`,
         'Authorization': `Bearer ${ACCESS_TOKEN}`
       },
-      body: `fields name; search "${GAME_NAME}"; limit 10;`,
+      body: `fields name; limit 10;`,
 
     }).then(response => {
       console.log(response);
