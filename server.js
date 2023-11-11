@@ -329,7 +329,7 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   let error = '';
 
   try{
-    const response = await igdb()
+    const response = await igdb('nolwnm8zi98nzj7l2mf2pnskfxptys', 'r537v37gn9njuov7pj4ziizfnpolo0')
       .fields('name')
       .search(GAME_NAME)
       .request('/games');
