@@ -325,24 +325,13 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   //outgoing: id, name
 
   const { GAME_NAME } = req.body;
-  const client = igdb('nolwnm8zi98nzj7l2mf2pnskfxptys', 'r537v37gn9njuov7pj4ziizfnpolo0');
   let error = '';
 
-  try{
-    const response = await igdb('nolwnm8zi98nzj7l2mf2pnskfxptys', 'r537v37gn9njuov7pj4ziizfnpolo0')
-      .fields('name')
-      .search(GAME_NAME)
-      .request('/games');
-
-    var ret = {response: response, error: error};
-  }
-  catch(err){
-    console.log(err);
-    error = err;
-    var ret = {error:error};    
-  }
-
-  res.status(200).json(ret);
+  const response = await igdb()
+    .fields('name')
+    .request('/games');
+  
+  res.status(200).json(response);
 });
 
 app.post("/api/searchSteamID", async (req, res, next) => {
