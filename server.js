@@ -327,7 +327,7 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   const api_url = `https://api.igdb.com/v4/games`;
 
   axios({
-    url: `https://cop4331-g4-ed21fec8c26b.herokuapp.${api_url}`,
+    url: `${api_url}`,
     method: 'POST',
     headers: {
       'Accept': 'application/json',
