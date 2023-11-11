@@ -323,7 +323,7 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   //incoming: name, CLIENT_ID, ACCESS_TOKEN
   //outgoing: id, name
 
-  const { name, CLIENT_ID, ACCESS_TOKEN } = req.body;
+  const { GAME_NAME, CLIENT_ID, ACCESS_TOKEN } = req.body;
   const api_url = `https://api.igdb.com/v4/games`;
 
   fetch(
@@ -334,7 +334,7 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
         'Client-ID': `${CLIENT_ID}`,
         'Authorization': `Bearer ${ACCESS_TOKEN}`
       },
-      body: `fields name; search "${name}";`
+      body: `fields name; search "${GAME_NAME}";`
   })
     .then(response => {
       res.status(200).json(response.json());
