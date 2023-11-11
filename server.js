@@ -5,7 +5,6 @@ const cors = require("cors");
 const axios = require("axios");
 const path = require("path");
 const crypto = require("crypto");
-const igdb = require('igdb-api-node');
 
 //Environment Variables
 require("dotenv").config();
@@ -324,14 +323,26 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   //incoming: name, CLIENT_ID, ACCESS_TOKEN
   //outgoing: id, name
 
-  const { GAME_NAME } = req.body;
-  let error = '';
+  const { GAME_NAME, CLIENT_ID, ACCESS_TOKEN } = req.body;
+  const api_url = `https://api.igdb.com/v4/games`;
 
-  const response = await igdb()
-    .fields('name')
-    .request('/games');
-  
-  res.status(200).json(response);
+  axios({
+    url: `${api_url}`,
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Client-ID': `${CLIENT_ID}`,
+      'Authorization': `Bearer ${ACCESS_TOKEN}`,
+    },
+    body: `fields name; search ${GAME_NAME}; limit 10;`
+  })
+  .then(response => {
+    console.log(response.data);
+    res.status(200).json(response.data);
+  })
+  .catch(err => {
+    console.log(err);
+  });
 });
 
 app.post("/api/searchSteamID", async (req, res, next) => {
