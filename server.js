@@ -326,21 +326,23 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   const { GAME_NAME, CLIENT_ID, ACCESS_TOKEN } = req.body;
   const api_url = `https://api.igdb.com/v4/games`;
 
-  fetch(
-    api_url,
-    { method: 'POST',
-      headers: {
-        'Client-ID': `${CLIENT_ID}`,
-        'Authorization': `Bearer ${ACCESS_TOKEN}`
-      },
-      body: `fields name; search "${GAME_NAME}";`
+  axios({
+    url: api_url,
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Client-ID': `${CLIENT_ID}`,
+      'Authorization': `Bearer ${ACCESS_TOKEN}`,
+    },
+    body: `fields name; search ${GAME_NAME}; limit 10;`
   })
-    .then(response => {
-      res.status(200).json(response.json());
-    })
-    .catch(err => {
-        console.error(err);
-    });
+  .then(response => {
+    console.log(response);
+    res.status(200).json(response.json());
+  })
+  .catch(err => {
+    console.log(err);
+  });
 });
 
 app.post("/api/searchSteamID", async (req, res, next) => {
