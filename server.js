@@ -327,7 +327,7 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   const api_url = `https://api.igdb.com/v4/games`;
 
   axios({
-    url: api_url,
+    url: `https://cop4331-g4-ed21fec8c26b.herokuapp.${api_url}`,
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -338,7 +338,7 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   })
   .then(response => {
     console.log(response);
-    res.status(200).json(response.json());
+    return res.status(200).json(response.json());
   })
   .catch(err => {
     console.log(err);
