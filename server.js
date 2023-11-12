@@ -176,9 +176,9 @@ app.post("/api/forgotPassword", async (req, res, next) => {
 
       let hostURL = "";
       if (process.env.NODE_ENV === "production") {
-        hostURL = "https://wwww.mysteamlist.com";
+        hostURL = "https://www.mysteamlist.com";
       } else {
-        hostURL = "https://wwww.localhost:3000";
+        hostURL = "https://www.localhost:3000";
       }
       let url = hostURL + "/resetPassword?token=" + token;
       sendMessage(user.Email, user.Username, url, "reset");
@@ -254,9 +254,9 @@ app.post("/api/register", async (req, res, next) => {
   if (error == "") {
     let hostURL = "";
     if (process.env.NODE_ENV === "production") {
-      hostURL = "https://wwww.mysteamlist.com";
+      hostURL = "https://www.mysteamlist.com";
     } else {
-      hostURL = "https://wwww.localhost:3000";
+      hostURL = "https://www.localhost:3000";
     }
     let url = hostURL + "/verify-email?token=" + token;
     sendMessage(email, username, url, "verify");
