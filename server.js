@@ -344,6 +344,18 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
     });
 });
 
+app.post("/api/getSteamGames", async (req, res, next) =>{
+
+  const api_url = "https://api.steampowered.com/ISteamApps/GetAppList/v2/?format=json&jsonp";
+  axios.get(api_url)
+    .then((response) => {
+      res.status(200);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 app.post("/api/searchSteamID", async (req, res, next) => {
   //incoming: IGDB_ID, CLIENT_ID, ACCESS_TOKEN
   //outgoing: STEAM_ID
