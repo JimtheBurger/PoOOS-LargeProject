@@ -343,20 +343,24 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   //       console.error(err);
   //   });
 
-  wrapper = igdb("nolwnm8zi98nzj7l2mf2pnskfxptys", "92bvh6gsx4ifkjutp0npr6rtm4sug5");
+  wrapper = igdb(
+    "nolwnm8zi98nzj7l2mf2pnskfxptys",
+    "92bvh6gsx4ifkjutp0npr6rtm4sug5"
+  );
 
   const response = await wrapper
-    .fields('name')
-    .search('mario')
-    .request('/games');
+    .fields("name")
+    .search("mario")
+    .request("/games");
 
   res.status(200).json(response);
 });
 
-app.post("/api/getSteamGames", async (req, res, next) =>{
-
-  const api_url = "https://api.steampowered.com/ISteamApps/GetAppList/v2/?format=json&jsonp";
-  axios.get(api_url)
+app.post("/api/getSteamGames", async (req, res, next) => {
+  const api_url =
+    "https://api.steampowered.com/ISteamApps/GetAppList/v2/?format=json&jsonp";
+  axios
+    .get(api_url)
     .then((response) => {
       res.status(200);
     })
