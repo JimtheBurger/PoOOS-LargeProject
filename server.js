@@ -321,6 +321,15 @@ app.post("/api/gamedetails", async (req, res, next) => {
     .then((appinfo) => {
       var i = appinfo.data[appid];
       ret = { name: i.data.name, appid: i.data.steam_appid, description: i.data.detailed_description, image: i.data.header_image, genres: i.data.genres, developers: i.data.developers, publishers: i.data.publishers, platforms: i.data.platforms, release: i.data.release_date };
+      
+      try{
+        const db = client.db("COP4331Cards");
+        db.collection("Games").insertOne(ret);
+      }
+      catch(e){
+        console.log(e.toString());
+      }
+      
       res.status(200).json(ret);
     })
     .catch((err) => {
