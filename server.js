@@ -312,7 +312,7 @@ app.post("/api/gamedetails", async (req, res, next) => {
 
   const { appid } = req.body;
   var ret;
-  const steam_api_url = `https://store.steampowered.com/api/appdetails?appids=${appid}`;
+  const steam_api_url = `https://store.steampowered.com/api/appdetails?appids=${appid}&l=english`;
 
   axios
     .get(steam_api_url, {
@@ -320,7 +320,7 @@ app.post("/api/gamedetails", async (req, res, next) => {
     })
     .then((appinfo) => {
       var i = appinfo.data[appid];
-      ret = { name: i.data.name, appid: i.data.steam_appid, description: i.data.detailed_description, image: i.data.header_image, genres: i.data.genres, developers: i.data.developers, publishers: i.data.publishers, platforms: i.data.platforms, release: i.data.release_date };
+      ret = { Name: i.data.name, AppID: i.data.steam_appid, Description: i.data.detailed_description, Image: i.data.header_image, Genres: i.data.genres, Developers: i.data.developers, Publishers: i.data.publishers, Platforms: i.data.platforms, Release: i.data.release_date };
       
       try{
         const db = client.db("COP4331Cards");
