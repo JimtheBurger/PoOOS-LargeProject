@@ -8,6 +8,8 @@ import {
   Container,
   Row,
   Col,
+  Alert,
+  Spinner,
 } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -51,14 +53,25 @@ function HookRegister() {
 
   //this is called when the form is submitted
   const formSubmit = async (data) => {
+    setIsLoading(true); // show spinner and disable button
     console.log(data);
     var reply = await connectAPI(data, "register");
     console.log(reply);
+    if (reply.Error !== "") {
+      setRegisterError(reply.Error);
+    } else {
+      window.location.href = "/profile";
+    }
+    setIsLoading(false); // Stop showing spinner and reenable button
   };
 
   //this lets us toggle showing the passwords or not
   const [showPass, setShowPass] = useState(false);
   const [showPassVal, setShowPassVal] = useState(false);
+
+  //this lets us control user feedback (normal, loading, error)
+  const [isLoading, setIsLoading] = useState(false);
+  const [registerError, setRegisterError] = useState("");
 
   //returned object
   return (
@@ -205,11 +218,24 @@ function HookRegister() {
                     size="lg"
                     style={{ width: "50%" }}
                     className="mx-auto text-light rounded-pill"
-                    variant="accent">
-                    Register
+                    variant="accent"
+                    disabled={isLoading}>
+                    {isLoading ? (
+                      <Spinner animation="border" size="lg" variant="primary" />
+                    ) : (
+                      "Register"
+                    )}
                   </Button>
                 </Row>
               </Form>
+              {registerError !== "" && (
+                <Alert
+                  variant="danger"
+                  dismissible
+                  onClose={() => setRegisterError("")}>
+                  {registerError}
+                </Alert>
+              )}
             </Card.Body>
             <Card.Footer>
               Already Have an Account? <a href="/login">Login Here</a>

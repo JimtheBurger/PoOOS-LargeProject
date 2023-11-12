@@ -7,6 +7,7 @@ import VerifyEmailPage from "./pages/VerifyEmailPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import WelcomePage from "./pages/WelcomePage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/resetPassword" element={<ResetPasswordPage />} />
         <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   );

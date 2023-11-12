@@ -7,6 +7,8 @@ import {
   Container,
   Row,
   Col,
+  Spinner,
+  Alert,
 } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -38,13 +40,26 @@ function HookLogin() {
 
   //this is called when the form is submitted
   const formSubmit = async (data) => {
+    setIsLoading(true); // Show spinner and disable button
     console.log(data);
     var reply = await connectAPI(data, "login");
     console.log(reply);
+
+    if (reply.Error !== "") {
+      setLoginError(reply.Error);
+    } else {
+      window.location.href = "/profile";
+    }
+
+    setIsLoading(false); // Stop showing spinner and reenable button
   };
 
   //this lets us toggle showing the passwords or not
   const [showPass, setShowPass] = useState(false);
+
+  //this lets us control user feedback (normal, loading, error)
+  const [isLoading, setIsLoading] = useState(false);
+  const [loginError, setLoginError] = useState("");
 
   //returned object
   return (
@@ -127,11 +142,24 @@ function HookLogin() {
                     size="lg"
                     style={{ width: "50%" }}
                     className="mx-auto text-light rounded-pill"
-                    variant="accent">
-                    Login
+                    variant="accent"
+                    disabled={isLoading}>
+                    {isLoading ? (
+                      <Spinner animation="border" size="lg" variant="primary" />
+                    ) : (
+                      "Login"
+                    )}
                   </Button>
                 </Row>
               </Form>
+              {loginError !== "" && (
+                <Alert
+                  variant="danger"
+                  dismissible
+                  onClose={() => setLoginError("")}>
+                  {loginError}
+                </Alert>
+              )}
             </Card.Body>
             <Card.Footer>
               Don't Have an Account? <a href="/register">Register Here</a>

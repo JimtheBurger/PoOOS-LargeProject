@@ -219,7 +219,7 @@ app.post("/api/resetPassword", async (req, res, next) => {
 
 app.post("/api/register", async (req, res, next) => {
   //  incoming: username, password, email, dob
-  //  outgoing: error
+  //  outgoing: Error
 
   var error = "";
   var dob = "01/12/2345";
@@ -250,7 +250,7 @@ app.post("/api/register", async (req, res, next) => {
     error = e.toString();
   }
 
-  var ret = { error: error };
+  var ret = { Error: error };
   if (error == "") {
     let hostURL = "";
     if (process.env.NODE_ENV === "production") {
@@ -335,7 +335,7 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   //       'Accept': 'application/json',
   //       'Client-ID': `${CLIENT_ID}`,
   //       'Authorization': `Bearer ${ACCESS_TOKEN}`
-  //     }, 
+  //     },
   //     body: `fields name; search "${GAME_NAME}"; limit 10;`
   // })
   //   .then(response => {
@@ -345,7 +345,7 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   //       console.error(err);
   //   });
 
-  const response = await igdb(`${CLIENT_ID}`,`${ACCESS_TOKEN}`)
+  const response = await igdb(`${CLIENT_ID}`, `${ACCESS_TOKEN}`)
     .fields("name")
     .request("/games");
 
@@ -359,21 +359,20 @@ app.post("/api/searchSteamID", async (req, res, next) => {
   const { IGDB_ID, CLIENT_ID, ACCESS_TOKEN } = req.body;
   const api_url = `https://api.igdb.com/v4/websites`;
 
-  fetch(
-    api_url,
-    { method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Client-ID': `${CLIENT_ID}`,
-        'Authorization': `Bearer ${ACCESS_TOKEN}`
-      }, 
-      body: `fields game, url; where game = ${IGDB_ID} & category = 13;`
+  fetch(api_url, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Client-ID": `${CLIENT_ID}`,
+      Authorization: `Bearer ${ACCESS_TOKEN}`,
+    },
+    body: `fields game, url; where game = ${IGDB_ID} & category = 13;`,
   })
-    .then(response => {
+    .then((response) => {
       res.status(200).json(response.json());
     })
-    .catch(err => {
-        console.error(err);
+    .catch((err) => {
+      console.error(err);
     });
 });
 /*
