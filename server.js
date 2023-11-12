@@ -316,7 +316,7 @@ app.post("/api/gamedetails", async (req, res, next) => {
     .then((appinfo) => {
       var i = appinfo.data[appid];
       var ret = { name: i.name, appid: i.steam_appid, description: i.detailed_description, image: i.header_image, genres: i.genres, developers: i.developers, publishers: i.publishers, platforms: i.platforms, release: i.release_date };
-      res.status(200).json(ret);
+      res.status(200).json(i);
     })
     .catch((err) => {
       console.log("Error: ", err.message);
