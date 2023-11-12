@@ -331,17 +331,12 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   fetch(
     api_url,
     { method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Client-ID': `${CLIENT_ID}`,
-        'Authorization': `Bearer ${ACCESS_TOKEN}`
-      },
       body: `fields name; search "${GAME_NAME}"; limit 10;`
   })
-    .then((response) => {
-      res.status(200).json(response.data);
+    .then(response => {
+      res.status(200).json(response);
     })
-    .catch((err) => {
+    .catch(err => {
         console.error(err);
     });
 
