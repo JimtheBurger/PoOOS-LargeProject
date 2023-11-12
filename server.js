@@ -315,7 +315,7 @@ app.post("/api/gamedetails", async (req, res, next) => {
     })
     .then((appinfo) => {
       i = appinfo.data[appid];
-      ret = { name: i.name, appid: i.steam_appid, description: i.detailed_description, image: i.header_image, genres: i.genres, developers: i.developers, publishers: i.publishers, platforms: i.platforms, release: i.release_date}
+      ret = { name: i.name, appid: i.steam_appid, description: i.detailed_description, image: i.header_image, genres: i.genres, developers: i.developers, publishers: i.publishers, platforms: i.platforms, release: i.release_date };
       res.status(200).json(ret);
     })
     .catch((err) => {
@@ -323,71 +323,71 @@ app.post("/api/gamedetails", async (req, res, next) => {
     });
 });
 
-app.post("/api/searchGamesIGDB", async (req, res, next) => {
-  //incoming: name, CLIENT_ID, ACCESS_TOKEN
-  //outgoing: id, name
+// app.post("/api/searchGamesIGDB", async (req, res, next) => {
+//   //incoming: name, CLIENT_ID, ACCESS_TOKEN
+//   //outgoing: id, name
 
-  const { GAME_NAME, CLIENT_ID, ACCESS_TOKEN } = req.body;
-  // const api_url = `https://api.igdb.com/v4/games`;
+//   const { GAME_NAME, CLIENT_ID, ACCESS_TOKEN } = req.body;
+//   // const api_url = `https://api.igdb.com/v4/games`;
 
-  // fetch(
-  //   api_url,
-  //   { method: 'POST',
-  //     headers: {
-  //       'Accept': 'application/json'
-  //     },
-  //     body: `fields name; search "${GAME_NAME}"; limit 10;`
-  // })
-  //   .then(response => {
-  //     res.status(200).json(response);
-  //   })
-  //   .catch(err => {
-  //       console.error(err);
-  //   });
+//   // fetch(
+//   //   api_url,
+//   //   { method: 'POST',
+//   //     headers: {
+//   //       'Accept': 'application/json'
+//   //     },
+//   //     body: `fields name; search "${GAME_NAME}"; limit 10;`
+//   // })
+//   //   .then(response => {
+//   //     res.status(200).json(response);
+//   //   })
+//   //   .catch(err => {
+//   //       console.error(err);
+//   //   });
 
-  wrapper = igdb(
-    "nolwnm8zi98nzj7l2mf2pnskfxptys",
-    "92bvh6gsx4ifkjutp0npr6rtm4sug5"
-  );
+//   wrapper = igdb(
+//     "nolwnm8zi98nzj7l2mf2pnskfxptys",
+//     "92bvh6gsx4ifkjutp0npr6rtm4sug5"
+//   );
 
-  const response = await wrapper
-    .fields("name")
-    .search("mario")
-    .request("/games");
+//   const response = await wrapper
+//     .fields("name")
+//     .search("mario")
+//     .request("/games");
 
-  res.status(200).json(response);
-});
+//   res.status(200).json(response);
+// });
 
-app.post("/api/getSteamGames", async (req, res, next) => {
-  const api_url =
-    "https://api.steampowered.com/ISteamApps/GetAppList/v2/?format=json&jsonp";
-  axios
-    .get(api_url)
-    .then((response) => {
-      res.status(200);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+// app.post("/api/getSteamGames", async (req, res, next) => {
+//   const api_url =
+//     "https://api.steampowered.com/ISteamApps/GetAppList/v2/?format=json&jsonp";
+//   axios
+//     .get(api_url)
+//     .then((response) => {
+//       res.status(200);
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// });
 
-app.post("/api/searchSteamID", async (req, res, next) => {
-  //incoming: IGDB_ID, CLIENT_ID, ACCESS_TOKEN
-  //outgoing: STEAM_ID
+// app.post("/api/searchSteamID", async (req, res, next) => {
+//   //incoming: IGDB_ID, CLIENT_ID, ACCESS_TOKEN
+//   //outgoing: STEAM_ID
 
-  const { IGDB_ID, CLIENT_ID, ACCESS_TOKEN } = req.body;
-  const api_url = `https://api.igdb.com/v4/websites`;
+//   const { IGDB_ID, CLIENT_ID, ACCESS_TOKEN } = req.body;
+//   const api_url = `https://api.igdb.com/v4/websites`;
 
-  fetch(api_url, {
-    method: "POST",
-  })
-    .then((response) => {
-      res.status(200).json(response.json());
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-});
+//   fetch(api_url, {
+//     method: "POST",
+//   })
+//     .then((response) => {
+//       res.status(200).json(response.json());
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//     });
+// });
 /*
 app.post('/api/searchcards', async (req, res, next) => 
 {
