@@ -326,22 +326,31 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
   //outgoing: id, name
 
   const { GAME_NAME, CLIENT_ID, ACCESS_TOKEN } = req.body;
-  const api_url = `https://api.igdb.com/v4/games`;
+  // const api_url = `https://api.igdb.com/v4/games`;
 
-  fetch(
-    api_url,
-    { method: 'POST',
-      headers: {
-        'Accept': 'application/json'
-      },
-      body: `fields name; search "${GAME_NAME}"; limit 10;`
-  })
-    .then(response => {
-      res.status(200).json(response);
-    })
-    .catch(err => {
-        console.error(err);
-    });
+  // fetch(
+  //   api_url,
+  //   { method: 'POST',
+  //     headers: {
+  //       'Accept': 'application/json'
+  //     },
+  //     body: `fields name; search "${GAME_NAME}"; limit 10;`
+  // })
+  //   .then(response => {
+  //     res.status(200).json(response);
+  //   })
+  //   .catch(err => {
+  //       console.error(err);
+  //   });
+
+  wrapper = igdb("nolwnm8zi98nzj7l2mf2pnskfxptys", "92bvh6gsx4ifkjutp0npr6rtm4sug5");
+
+  const response = await wrapper
+    .fields('name')
+    .search('mario')
+    .request('/games');
+
+  res.status(200).json(response);
 });
 
 app.post("/api/getSteamGames", async (req, res, next) =>{
