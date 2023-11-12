@@ -314,8 +314,8 @@ app.post("/api/gamedetails", async (req, res, next) => {
       "Accept-Language": "en-US",
     })
     .then((appinfo) => {
-      i = appinfo.data[appid];
-      ret = { name: i.name, appid: i.steam_appid, description: i.detailed_description, image: i.header_image, genres: i.genres, developers: i.developers, publishers: i.publishers, platforms: i.platforms, release: i.release_date };
+      var i = appinfo.data[appid];
+      var ret = { name: i.name, appid: i.steam_appid, description: i.detailed_description, image: i.header_image, genres: i.genres, developers: i.developers, publishers: i.publishers, platforms: i.platforms, release: i.release_date };
       res.status(200).json(ret);
     })
     .catch((err) => {
