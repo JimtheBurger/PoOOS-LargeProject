@@ -311,9 +311,9 @@ app.post("/api/gamedetails", async (req, res, next) => {
   //outgoing: name, appid, description, image, genres, developers, publishers, platforms, release
 
   const { appid } = req.body;
-  var error = '';
   var ret;
   const steam_api_url = `https://store.steampowered.com/api/appdetails?appids=${appid}`;
+
   axios
     .get(steam_api_url, {
       "Accept-Language": "en-US",
@@ -321,12 +321,11 @@ app.post("/api/gamedetails", async (req, res, next) => {
     .then((appinfo) => {
       var i = appinfo.data[appid];
       ret = { name: i.data.name, appid: i.data.steam_appid, description: i.data.detailed_description, image: i.data.header_image, genres: i.data.genres, developers: i.data.developers, publishers: i.data.publishers, platforms: i.data.platforms, release: i.data.release_date };
+      res.status(200).json(ret);
     })
     .catch((err) => {
       console.log("Error: ", err.message);
     });
-
-  res.status(200).json(ret);
 
 });
 
