@@ -7,7 +7,7 @@ const TopNav = () => {
   return (
     <Navbar expand="md" className="bg-purple" variant="dark">
       <Container>
-        <Navbar.Brand href="home">
+        <Navbar.Brand href="/">
           <BsJoystick /> MySteamList
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
