@@ -344,9 +344,6 @@ app.post("/api/searchGamesIGDB", async (req, res, next) => {
     .catch(err => {
         console.error(err);
     });
-
-
-  res.status(200).json(response);
 });
 
 app.post("/api/searchSteamID", async (req, res, next) => {
@@ -358,12 +355,6 @@ app.post("/api/searchSteamID", async (req, res, next) => {
 
   fetch(api_url, {
     method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Client-ID": `${CLIENT_ID}`,
-      Authorization: `Bearer ${ACCESS_TOKEN}`,
-    },
-    body: `fields game, url; where game = ${IGDB_ID} & category = 13;`,
   })
     .then((response) => {
       res.status(200).json(response.json());
