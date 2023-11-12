@@ -307,20 +307,34 @@ app.post("/api/gamedetails", async (req, res, next) => {
   // celeste:   504230
   // cyberpunk: 1091500
 
+  //incoming: appid
+  //outgoing: name, appid, description, image, genres, developers, publishers, platforms, release
+
   const { appid } = req.body;
+  var error = '';
   const steam_api_url = `https://store.steampowered.com/api/appdetails?appids=${appid}`;
   axios
     .get(steam_api_url, {
       "Accept-Language": "en-US",
     })
     .then((appinfo) => {
-      var i = appinfo.data[appid];
-      var ret = { name: i.data.name, appid: i.data.steam_appid, description: i.data.detailed_description, image: i.data.header_image, genres: i.data.genres, developers: i.data.developers, publishers: i.data.publishers, platforms: i.data.platforms, release: i.data.release_date };
-      res.status(200).json(ret);
+      
+      try{
+        const db = client.db("COP4331Cards");
+        const i = appinfo.data[appid];
+        const ret = { name: i.data.name, appid: i.data.steam_appid, description: i.data.detailed_description, image: i.data.header_image, genres: i.data.genres, developers: i.data.developers, publishers: i.data.publishers, platforms: i.data.platforms, release: i.data.release_date };
+      }
+      catch(e){
+        error = e;
+      }
+      
     })
     .catch((err) => {
+      error = err;
       console.log("Error: ", err.message);
     });
+
+    res.status(200).json(ret);
 });
 
 // app.post("/api/searchGamesIGDB", async (req, res, next) => {

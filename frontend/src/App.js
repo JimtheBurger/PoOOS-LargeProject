@@ -8,6 +8,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import WelcomePage from "./pages/WelcomePage";
 import ProfilePage from "./pages/ProfilePage";
+import AdminAddGames from "./pages/AdminAddGames";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/resetPassword" element={<ResetPasswordPage />} />
         <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/adminAddGames" element={<AdminAddGames />} />
       </Routes>
     </BrowserRouter>
   );
