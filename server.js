@@ -356,23 +356,27 @@ app.post("/api/searchGameName", async (req, res, next) =>{
     const db = client.db("COP4331Cards");
     const gamesCursor = await db.collection("Games").find( {"Name": name} );
 
+    let count = 0;
+    let gamesArr = gamesCursor.toArray();
+
     while(gamesCursor.hasNext()){
-      games.push(tojson(gamesCursor.next()));
+      games.push(gamesArr[count]);
+      ++count;
     }
 
-    res.status(200).json(games.json());
+    res.status(200).json(games);
   }
   catch(e){
     console.log(e.toString());
   }
-  
+
 });
 
 // app.post("/api/searchGamesIGDB", async (req, res, next) => {
 //   //incoming: name, CLIENT_ID, ACCESS_TOKEN
 //   //outgoing: id, name
 
-//   const { GAME_NAME, CLIENT_ID, ACCESS_TOKEN } = req.body;
+//   const { GAME_NAME, CLIENT_ID, ACCESS_TOKEN } = req.body;se
 //   // const api_url = `https://api.igdb.com/v4/games`;
 
 //   // fetch(
