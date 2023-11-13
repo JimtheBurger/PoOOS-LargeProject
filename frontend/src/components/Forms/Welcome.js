@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -6,8 +6,50 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
 function Welcome() {
+  const [games, setGames] = useState([]);
+
+  //Gets game data from database
+  useEffect(() => {
+    const fetchData = async () => {
+      let response;
+      try {
+        if (process.env.NODE_ENV === "production") {
+          response = await fetch(
+            "https://cop4331-g4-ed21fec8c26b.herokuapp.com/api/games"
+          );
+        } else {
+          response = await fetch("http://localhost:5000/api/games");
+        }
+        const data = await response.json();
+        setGames(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  //Stores four Adventure Games
+  const adventureGames = games.filter((game) =>
+    game.Genres.includes("Adventure")
+  );
+  const firstFourAdventureGames = adventureGames.slice(8, 12);
+
+  //Stores four Strategy Games
+  const strategyGames = games.filter((game) =>
+    game.Genres.includes("Strategy")
+  );
+  const firstFourStrategyGames = strategyGames.slice(4, 8);
+
+  //Stores four Simulation Games
+  const simulationGames = games.filter((game) =>
+    game.Genres.includes("Simulation")
+  );
+  const firstFourSimulationGames = simulationGames.slice(10, 14);
+
   const cardStyle = {
-    width: "calc(100% - 20px)", // 25% width with 10px horizontal margin on each side
+    width: "calc(100% - 20px)", // 100% width with 20px horizontal margin on each side
     margin: "0 10px 50px 10px", // 10px horizontal margin, 50px vertical margin
   };
 
@@ -43,73 +85,50 @@ function Welcome() {
         </Col>
       </Row>
 
-      <Row style={{ marginTop: "50px" }} className="text-center">
-        <Col>
-          <h2>Trending</h2>
+      <Row style={{ marginTop: "50px" }}>
+        <Col className="text-center">
+          <h2>Strategy</h2>
         </Col>
       </Row>
       <Row>
-        {[1, 2, 3, 4].map((cardNumber) => (
-          <Col key={cardNumber} md={3}>
+        {firstFourStrategyGames.map((game) => (
+          <Col key={game._id} md={3}>
             <Card style={cardStyle}>
-              <Card.Img variant="top" src="holder.js/285px380" />
-              <Card.Body>
-                <Card.Title>Card Title {cardNumber}</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </Card.Text>
-                <Button variant="primary">Go somewhere</Button>
-              </Card.Body>
-              <Card.Footer>Game Title</Card.Footer>
+              <Card.Img variant="top" src={game.Image} />
+
+              <Card.Footer>{game.Name}</Card.Footer>
             </Card>
           </Col>
         ))}
       </Row>
 
-      <Row className="text-center">
-        <Col>
-          <h2>Top Rated</h2>
+      <Row>
+        <Col className="text-center">
+          <h2>Adventure</h2>
         </Col>
       </Row>
       <Row>
-        {[5, 6, 7, 8].map((cardNumber) => (
-          <Col key={cardNumber} md={3}>
+        {firstFourAdventureGames.map((game) => (
+          <Col key={game._id} md={3}>
             <Card style={cardStyle}>
-              <Card.Img variant="top" src="holder.js/285px380" />
-              <Card.Body>
-                <Card.Title>Card Title {cardNumber}</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </Card.Text>
-                <Button variant="primary">Go somewhere</Button>
-              </Card.Body>
-              <Card.Footer>Game Title</Card.Footer>
+              <Card.Img variant="top" src={game.Image} />
+              <Card.Footer>{game.Name}</Card.Footer>
             </Card>
           </Col>
         ))}
       </Row>
 
-      <Row className="text-center">
-        <Col>
-          <h2>Best Selling</h2>
+      <Row>
+        <Col className="text-center">
+          <h2>Simulation</h2>
         </Col>
       </Row>
       <Row>
-        {[9, 10, 11, 12].map((cardNumber) => (
-          <Col key={cardNumber} md={3}>
+        {firstFourSimulationGames.map((game) => (
+          <Col key={game._id} md={3}>
             <Card style={cardStyle}>
-              <Card.Img variant="top" src="holder.js/285px380" />
-              <Card.Body>
-                <Card.Title>Card Title {cardNumber}</Card.Title>
-                <Card.Text>
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
-                </Card.Text>
-                <Button variant="primary">Go somewhere</Button>
-              </Card.Body>
-              <Card.Footer>Game Title</Card.Footer>
+              <Card.Img variant="top" src={game.Image} />
+              <Card.Footer>{game.Name}</Card.Footer>
             </Card>
           </Col>
         ))}
