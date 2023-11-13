@@ -319,8 +319,12 @@ app.post("/api/gamedetails", async (req, res, next) => {
       "Accept-Language": "en-US",
     })
     .then((appinfo) => {
-      var i = appinfo.data[appid];
-      ret = { Name: i.data.name, AppID: i.data.steam_appid, Description: i.data.detailed_description, Image: i.data.header_image, Genres: i.data.genres, Developers: i.data.developers, Publishers: i.data.publishers, Platforms: i.data.platforms, Release: i.data.release_date };
+      let i = appinfo.data[appid];
+      let genres = [];
+      
+      i.data.genres.forEach((element) => genres.push(element));
+
+      ret = { Name: i.data.name, AppID: i.data.steam_appid, Description: i.data.detailed_description, Image: i.data.header_image, Genres: genres, Developers: i.data.developers, Publishers: i.data.publishers, Platforms: i.data.platforms, Release: i.data.release_date };
       
       try{
         const db = client.db("COP4331Cards");
