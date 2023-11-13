@@ -356,8 +356,8 @@ app.post("/api/allGames", async (req, res, next) =>{
 
   try{
     const db = client.db("COP4331Cards");
-    const games = await db.collection("Games").find({}, {AppID: 1, _id:0});
-    res.status(200).json(games);
+    const games = await db.collection("Games").find().toArray();
+    res.status(200).json(games.json());
   }
   catch(e){
     console.log(e.toString());
