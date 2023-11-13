@@ -349,7 +349,23 @@ app.post("/api/searchGameName", async (req, res, next) =>{
   //outgoing: appid
 
   var error = "";
+  var games = [];
   const { name } = req.body;
+
+  try{
+    const db = client.db("COP4331Cards");
+    const gamesCursor = await db.collection("Games").find( {"Name": name} );
+
+    while(gamesCursor.hasNext()){
+      games.push(tojson(gamesCursor.next()));
+    }
+
+    res.status(200).json(games.json());
+  }
+  catch(e){
+    console.log(e.toString());
+  }
+  
 });
 
 // app.post("/api/searchGamesIGDB", async (req, res, next) => {
