@@ -319,23 +319,33 @@ app.post("/api/gamedetails", async (req, res, next) => {
     .then(async (appinfo) => {
       let i = appinfo.data[appid];
       let genres = [];
-      
+
       i.data.genres.forEach((element) => genres.push(element.description));
 
-      ret = { Name: i.data.name, AppID: i.data.steam_appid, Description: i.data.short_description, Image: i.data.header_image, Genres: genres, Price: i.data.price_overview, Developers: i.data.developers, Publishers: i.data.publishers, Platforms: i.data.platforms, Release: i.data.release_date };
-      
-      try{
-        const db = client.db("COP4331Cards");
-        const game = await db.collection("Games").findOne({AppID: ret.AppID});
+      ret = {
+        Name: i.data.name,
+        AppID: i.data.steam_appid,
+        Description: i.data.short_description,
+        Image: i.data.header_image,
+        Genres: genres,
+        Price: i.data.price_overview,
+        Developers: i.data.developers,
+        Publishers: i.data.publishers,
+        Platforms: i.data.platforms,
+        Release: i.data.release_date,
+      };
 
-        if(!game){
+      try {
+        const db = client.db("COP4331Cards");
+        const game = await db.collection("Games").findOne({ AppID: ret.AppID });
+
+        if (!game) {
           db.collection("Games").insertOne(ret);
         }
-      }
-      catch(e){
+      } catch (e) {
         console.log(e.toString());
       }
-      
+
       res.status(200).json(ret);
     })
     .catch((err) => {
@@ -344,7 +354,7 @@ app.post("/api/gamedetails", async (req, res, next) => {
 });
 
 //search games based on game's name
-app.post("/api/searchGameName", async (req, res, next) =>{
+app.post("/api/searchGameName", async (req, res, next) => {
   //incoming: name
   //outgoing: appid
 
@@ -352,16 +362,44 @@ app.post("/api/searchGameName", async (req, res, next) =>{
   var games = [];
   const { name } = req.body;
 
-  try{
+  try {
     const db = client.db("COP4331Cards");
-    const gamesCursor = await db.collection("Games").find( {Name: name} ).toArray();
+    const gamesCursor = await db
+      .collection("Games")
+      .find({ Name: name })
+      .toArray();
 
     res.status(200).json(gamesCursor);
-  }
-  catch(e){
+  } catch (e) {
     console.log(e.toString());
   }
+});
 
+//search games based on game's name
+app.post("/api/searchAppID", async (req, res, next) => {
+  //incoming: AppID
+  //outgoing: Game(obj) of (Name, Description, Image, Genres[], Price(obj), Developers[], Publishers[], Platforms(obj), Release(obj)), Error
+
+  var error = "";
+  var ret = "";
+  const { AppID } = req.body;
+
+  console.log(AppID);
+
+  try {
+    const db = client.db("COP4331Cards");
+    const gameObj = await db.collection("Games").findOne({ AppID: AppID });
+
+    if (gameObj) {
+      ret = { Game: gameObj, Error: error };
+    } else {
+      ret = { Game: null, Error: "No Game Found" };
+    }
+
+    res.status(200).json(ret);
+  } catch (e) {
+    console.log(e.toString());
+  }
 });
 
 // app.post("/api/searchGamesIGDB", async (req, res, next) => {
