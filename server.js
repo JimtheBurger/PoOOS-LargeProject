@@ -324,17 +324,14 @@ app.post("/api/gamedetails", async (req, res, next) => {
       
       i.data.genres.forEach((element) => genres.push(element.description));
 
-      ret = { Name: i.data.name, AppID: i.data.steam_appid, Description: i.data.detailed_description, Image: i.data.header_image, Genres: genres, Developers: i.data.developers, Publishers: i.data.publishers, Platforms: i.data.platforms, Release: i.data.release_date };
+      ret = { Name: i.data.name, AppID: i.data.steam_appid, Description: i.data.detailed_description, Image: i.data.header_image, Genres: genres, Price: i.price_overview, Developers: i.data.developers, Publishers: i.data.publishers, Platforms: i.data.platforms, Release: i.data.release_date };
       
       try{
         const db = client.db("COP4331Cards");
         const game = await db.collection("Games").findOne({AppID: ret.AppID});
-        
+
         if(!game){
           db.collection("Games").insertOne(ret);
-        }
-        else{
-          console.log("Game already exists");
         }
       }
       catch(e){
