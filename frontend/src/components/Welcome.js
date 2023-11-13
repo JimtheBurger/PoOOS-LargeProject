@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import "./GameCard.css";
 
 function Welcome() {
   const [games, setGames] = useState([]);
@@ -14,9 +15,7 @@ function Welcome() {
       let response;
       try {
         if (process.env.NODE_ENV === "production") {
-          response = await fetch(
-            "https://cop4331-g4-ed21fec8c26b.herokuapp.com/api/games"
-          );
+          response = await fetch("https://mysteamlist.com/api/games");
         } else {
           response = await fetch("http://localhost:5000/api/games");
         }
@@ -34,19 +33,19 @@ function Welcome() {
   const adventureGames = games.filter((game) =>
     game.Genres.includes("Adventure")
   );
-  const firstFourAdventureGames = adventureGames.slice(8, 12);
+  const firstFourAdventureGames = adventureGames.slice(8, 11);
 
   //Stores four Strategy Games
   const strategyGames = games.filter((game) =>
     game.Genres.includes("Strategy")
   );
-  const firstFourStrategyGames = strategyGames.slice(4, 8);
+  const firstFourStrategyGames = strategyGames.slice(4, 7);
 
   //Stores four Simulation Games
   const simulationGames = games.filter((game) =>
     game.Genres.includes("Simulation")
   );
-  const firstFourSimulationGames = simulationGames.slice(10, 14);
+  const firstFourSimulationGames = simulationGames.slice(10, 13);
 
   const cardStyle = {
     width: "calc(100% - 20px)", // 100% width with 20px horizontal margin on each side
@@ -92,10 +91,14 @@ function Welcome() {
       </Row>
       <Row>
         {firstFourStrategyGames.map((game) => (
-          <Col key={game._id} md={3}>
+          <Col key={game._id} md={4}>
             <Card style={cardStyle}>
-              <Card.Img variant="top" src={game.Image} />
-
+              <div className="image">
+                <Card.Img variant="top" src={game.Image} />
+                <div className="p-3 image__overlay image__overlay--blur">
+                  {game.Description}
+                </div>
+              </div>
               <Card.Footer>{game.Name}</Card.Footer>
             </Card>
           </Col>
@@ -109,9 +112,14 @@ function Welcome() {
       </Row>
       <Row>
         {firstFourAdventureGames.map((game) => (
-          <Col key={game._id} md={3}>
+          <Col key={game._id} md={4}>
             <Card style={cardStyle}>
-              <Card.Img variant="top" src={game.Image} />
+              <div className="image">
+                <Card.Img variant="top" src={game.Image} />
+                <div className="p-3 image__overlay image__overlay--blur">
+                  {game.Description}
+                </div>
+              </div>
               <Card.Footer>{game.Name}</Card.Footer>
             </Card>
           </Col>
@@ -125,9 +133,14 @@ function Welcome() {
       </Row>
       <Row>
         {firstFourSimulationGames.map((game) => (
-          <Col key={game._id} md={3}>
+          <Col key={game._id} md={4}>
             <Card style={cardStyle}>
-              <Card.Img variant="top" src={game.Image} />
+              <div className="image">
+                <Card.Img variant="top" src={game.Image} />
+                <div className="p-3 image__overlay image__overlay--blur">
+                  {game.Description}
+                </div>
+              </div>
               <Card.Footer>{game.Name}</Card.Footer>
             </Card>
           </Col>
