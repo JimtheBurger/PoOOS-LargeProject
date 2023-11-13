@@ -38,12 +38,6 @@ function AdminAddGameBox()
     }
   }
 
-  const fixDescriptions = async event =>
-  {
-    event.preventDefault();
-    
-  }
-
   return(
     <div className='adminAddGame'>
       <form className='form'>
