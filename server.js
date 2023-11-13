@@ -298,10 +298,8 @@ app.post("/api/verify-email", async (req, res, next) => {
   res.status(200).json(ret);
 });
 
-// hijack steam's api to get information for a game based on its appid
-// (this is just a wrapper for steam's api for now)
+//adds game details into the db based on appID
 app.post("/api/gamedetails", async (req, res, next) => {
-  // TODO: figure out a way to find an appid based on game title
   // here are some sample appid's for testing:
   // terraria:  105600
   // celeste:   504230
@@ -324,7 +322,7 @@ app.post("/api/gamedetails", async (req, res, next) => {
       
       i.data.genres.forEach((element) => genres.push(element.description));
 
-      ret = { Name: i.data.name, AppID: i.data.steam_appid, Description: i.data.detailed_description, Image: i.data.header_image, Genres: genres, Price: i.price_overview, Developers: i.data.developers, Publishers: i.data.publishers, Platforms: i.data.platforms, Release: i.data.release_date };
+      ret = { Name: i.data.name, AppID: i.data.steam_appid, Description: i.data.detailed_description, Image: i.data.header_image, Genres: genres, Price: i.data.price_overview, Developers: i.data.developers, Publishers: i.data.publishers, Platforms: i.data.platforms, Release: i.data.release_date };
       
       try{
         const db = client.db("COP4331Cards");
@@ -343,7 +341,15 @@ app.post("/api/gamedetails", async (req, res, next) => {
     .catch((err) => {
       console.log("Error: ", err.message);
     });
+});
 
+//search games based on game's name
+app.post("/api/searchGameName", async (req, res, next) =>{
+  //incoming: name
+  //outgoing: appid
+
+  var error = "";
+  const { name } = req.body;
 });
 
 // app.post("/api/searchGamesIGDB", async (req, res, next) => {
