@@ -28,6 +28,9 @@ function AdminAddGameBox()
     {
       const response = await fetch(buildPath('gamedetails'),
         {method:'POST', body:js, headers:{'Content-Type': 'application/json'}});
+
+      var res = JSON.parse(await response);
+      console.log(res)
     }
     catch (e)
     {
