@@ -318,7 +318,7 @@ app.post("/api/gamedetails", async (req, res, next) => {
     .get(steam_api_url, {
       "Accept-Language": "en-US",
     })
-    .then((appinfo) => {
+    .then(async (appinfo) => {
       let i = appinfo.data[appid];
       let genres = [];
       
@@ -328,7 +328,14 @@ app.post("/api/gamedetails", async (req, res, next) => {
       
       try{
         const db = client.db("COP4331Cards");
-        db.collection("Games").insertOne(ret);
+        const game = await db.collection("Games").findOne({AppID: ret.AppID});
+        
+        if(!game){
+          db.collection("Games").insertOne(ret);
+        }
+        else{
+          console.log("Game already exists");
+        }
       }
       catch(e){
         console.log(e.toString());
