@@ -402,7 +402,7 @@ app.post("/api/searchAppID", async (req, res, next) => {
   }
 });
 
-app.get("/api/games", async (req, res) => {
+app.get("/api/games", async (req, res, next) => {
   try {
     const db = client.db("COP4331Cards");
     const games = await db.collection("Games").find().toArray();
