@@ -328,9 +328,9 @@ app.post("/api/gamedetails", async (req, res, next) => {
         const db = client.db("COP4331Cards");
         const game = await db.collection("Games").findOne({AppID: ret.AppID});
 
-        // if(!game){
-        //   db.collection("Games").insertOne(ret);
-        // }
+        if(!game){
+          db.collection("Games").insertOne(ret);
+        }
       }
       catch(e){
         console.log(e.toString());
