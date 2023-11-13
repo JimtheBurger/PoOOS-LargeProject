@@ -402,6 +402,17 @@ app.post("/api/searchAppID", async (req, res, next) => {
   }
 });
 
+app.get("/api/games", async (req, res) => {
+  try {
+    const db = client.db("COP4331Cards");
+    const games = await db.collection("Games").find().toArray();
+    res.json(games);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 // app.post("/api/searchGamesIGDB", async (req, res, next) => {
 //   //incoming: name, CLIENT_ID, ACCESS_TOKEN
 //   //outgoing: id, name
