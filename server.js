@@ -322,7 +322,7 @@ app.post("/api/gamedetails", async (req, res, next) => {
       let i = appinfo.data[appid];
       let genres = [];
       
-      i.data.genres.forEach((element) => genres.push(element));
+      i.data.genres.forEach((element) => genres.push(element.description));
 
       ret = { Name: i.data.name, AppID: i.data.steam_appid, Description: i.data.detailed_description, Image: i.data.header_image, Genres: genres, Developers: i.data.developers, Publishers: i.data.publishers, Platforms: i.data.platforms, Release: i.data.release_date };
       
