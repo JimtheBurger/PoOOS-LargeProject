@@ -354,17 +354,17 @@ app.post("/api/searchGameName", async (req, res, next) =>{
 
   try{
     const db = client.db("COP4331Cards");
-    const gamesCursor = await db.collection("Games").find( {"Name": name} );
+    const gamesCursor = db.collection("Games").find( {"Name": name} );
 
-    let count = 0;
-    let gamesArr = gamesCursor.toArray();
+    // let count = 0;
+    // let gamesArr = gamesCursor.toArray();
 
-    while(gamesCursor.hasNext()){
-      games.push(gamesArr[count]);
-      ++count;
-    }
+    // while(gamesCursor.hasNext()){
+    //   games.push(gamesArr[count]);
+    //   ++count;
+    // }
 
-    res.status(200).json(games);
+    res.status(200).json(gamesCursor);
   }
   catch(e){
     console.log(e.toString());
