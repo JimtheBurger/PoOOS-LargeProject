@@ -354,7 +354,7 @@ app.post("/api/searchGameName", async (req, res, next) =>{
 
   try{
     const db = client.db("COP4331Cards");
-    const gamesCursor = await db.collection("Games").find( {Name: name}, {AppID: 1, Name: 0, _id: 0, Description: 0, Image: 0, Genres: 0, Price: 0, Developers: 0, Publishers: 0, Platforms: 0} ).toArray();
+    const gamesCursor = await db.collection("Games").find( {Name: name} ).toArray();
 
     res.status(200).json(gamesCursor);
   }
