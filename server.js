@@ -354,7 +354,7 @@ app.post("/api/searchGameName", async (req, res, next) =>{
 
   try{
     const db = client.db("COP4331Cards");
-    const gamesCursor = db.collection("Games").find( {"Name": name} );
+    const gamesCursor = db.collection("Games").find( {Name: name} ).toArray();
 
     // let count = 0;
     // let gamesArr = gamesCursor.toArray();
