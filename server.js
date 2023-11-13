@@ -328,9 +328,9 @@ app.post("/api/gamedetails", async (req, res, next) => {
         const db = client.db("COP4331Cards");
         const game = await db.collection("Games").findOne({AppID: ret.AppID});
 
-        if(!game){
-          db.collection("Games").insertOne(ret);
-        }
+        // if(!game){
+        //   db.collection("Games").insertOne(ret);
+        // }
       }
       catch(e){
         console.log(e.toString());
@@ -350,18 +350,6 @@ app.post("/api/searchGameName", async (req, res, next) =>{
 
   var error = "";
   const { name } = req.body;
-});
-
-app.post("/api/allGames", async (req, res, next) =>{
-
-  try{
-    const db = client.db("COP4331Cards");
-    const games = await db.collection("Games").find().toArray();
-    res.status(200).json(games.json());
-  }
-  catch(e){
-    console.log(e.toString());
-  }
 });
 
 // app.post("/api/searchGamesIGDB", async (req, res, next) => {
