@@ -77,7 +77,8 @@ function Welcome() {
                   style={{ marginRight: "10px" }}
                   href="register"
                   variant="primary"
-                  className="mr-2">
+                  className="mr-2"
+                >
                   JOIN NOW
                 </Button>
                 <Button href="login" variant="success">
