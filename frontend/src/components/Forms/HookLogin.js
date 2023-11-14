@@ -48,7 +48,7 @@ function HookLogin() {
     if (reply.Error !== "") {
       setLoginError(reply.Error);
     } else {
-      window.location.href = "/profile";
+      //window.location.href = "/profile";
     }
 
     setIsLoading(false); // Stop showing spinner and reenable button
