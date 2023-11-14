@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import GameCard from "../Cards/GameCard";
 
 function Browse() {
   const [games, setGames] = useState([]);
@@ -111,18 +112,19 @@ function Browse() {
                   onChange={handleGenreChange}
                 >
                   <option value="">All Genres</option>
-                  <option value="Casual">Casual</option>
-                  <option value="Indie">Indie</option>
-                  <option value="Simulation">Simulation</option>
-                  <option value="Strategy">Strategy</option>
-                  <option value="Adventure">Adventure</option>
                   <option value="Action">Action</option>
+                  <option value="Adventure">Adventure</option>
+                  <option value="Casual">Casual</option>
+                  <option value="Free to Play">Free to Play</option>
+                  <option value="Indie">Indie</option>
                   <option value="Massively Multiplayer">
                     Massively Multiplayer
                   </option>
-                  <option value="RPG">RPG</option>
                   <option value="Racing">Racing</option>
+                  <option value="RPG">RPG</option>
+                  <option value="Simulation">Simulation</option>
                   <option value="Sports">Sports</option>
+                  <option value="Strategy">Strategy</option>
                 </Form.Control>
               </Form.Group>
             </Card.Body>
@@ -137,11 +139,8 @@ function Browse() {
       </Row>
       <Row>
         {filteredGamesByGenre.map((game) => (
-          <Col key={game._id} md={3}>
-            <Card style={cardStyle}>
-              <Card.Img variant="top" src={game.Image} />
-              <Card.Footer>{game.Name}</Card.Footer>
-            </Card>
+          <Col sm={6} md={3} style={{ marginBottom: "20px" }}>
+            <GameCard game={game} />
           </Col>
         ))}
       </Row>
