@@ -110,7 +110,7 @@ function Browse() {
                   value={selectedGenre}
                   onChange={handleGenreChange}
                 >
-                  <option value="">All Genres</option>
+                  <option value="">Any</option>
                   <option value="Action">Action</option>
                   <option value="Adventure">Adventure</option>
                   <option value="Casual">Casual</option>
