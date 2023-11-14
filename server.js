@@ -162,6 +162,22 @@ app.post("/api/login", async (req, res, next) => {
   res.status(200).json(ret);
 });
 
+app.post("/api/logout", async (req, res) => {
+  //Takes incoming jwt and clears it
+  var error = "";
+  const token = req.cookies.token;
+
+  try {
+    const val = jwt.verify(token, process.env.JSON_SECRET);
+    req.Username = val.Username;
+    res.clearCookie("token");
+  } catch (err) {
+    res.clearCookie("token");
+    error = "invalid token / cleared";
+  }
+  return res.status(200).json({ Error: error });
+});
+
 app.post("/api/forgotPassword", async (req, res, next) => {
   // Takes username and sends associated email a reset token (stores reset token on mongodb)
   // incoming: username

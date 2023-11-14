@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import LoginPage from "./pages/LoginPage";
@@ -14,6 +14,15 @@ import AppContext from "./context/AppContext";
 
 function App() {
   const [user, setUser] = useState({ Username: "", IsLoggedIn: false });
+
+  useEffect(() => {
+    setUser(JSON.parse(window.localStorage.getItem("state")));
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("state", JSON.stringify(user));
+  }, [user]);
+
   return (
     <AppContext.Provider value={{ user, setUser }}>
       <BrowserRouter>

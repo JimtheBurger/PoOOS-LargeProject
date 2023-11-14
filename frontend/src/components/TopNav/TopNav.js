@@ -1,13 +1,23 @@
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BsJoystick } from "react-icons/bs";
 import AppContext from "../../context/AppContext";
 import { useContext } from "react";
+import { Button } from "react-bootstrap";
+import { connectAPI } from "../Forms/connectAPI";
 
 const TopNav = () => {
-  const { user } = useContext(AppContext);
+  const { user, setUser } = useContext(AppContext);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    let error = await connectAPI({ empty: "empty" }, "logout");
+    setUser({ Username: "", IsLoggedIn: false });
+    navigate("/");
+  };
+
   console.log("TopNav sees ", user, user.IsLoggedIn);
   return (
     <Navbar expand="md" className="bg-purple" variant="dark">
@@ -40,9 +50,9 @@ const TopNav = () => {
               </Nav.Link>
             )}
             {user.IsLoggedIn && (
-              <Nav.Link as={Link} to="/logout">
+              <Button variant="outline-accent" onClick={() => handleLogout()}>
                 logout
-              </Nav.Link>
+              </Button>
             )}
           </Nav>
         </Navbar.Collapse>
