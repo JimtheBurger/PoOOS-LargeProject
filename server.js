@@ -272,8 +272,51 @@ app.post("/api/register", async (req, res, next) => {
   res.status(200).json(ret);
 });
 
+//Remakes new email token and sends new auth email
+app.post("/api/resend-verify", jwtAuth, async (req, res, next) => {
+  //incoming: jwt
+  //outgoing: error
+
+  var error = "";
+
+  try {
+    //get user from token header
+    let username = req.Username;
+    const db = client.db("COP4331Cards");
+    const user = await db.collection("Users").findOne({ Username: username });
+
+    //If user doesn't exist, token header false
+    if (!user) {
+      error = "Token has no match";
+
+      //If user exists but is verified, return error
+    } else if (user.Verified) {
+      error = "User already verified";
+    } else {
+      //If user exists and isn't verified, set new token and resend email
+      var token = crypto.randomBytes(64).toString("hex");
+      const filter = { _id: user._id };
+      const newVals = { $set: { EmailToken: token } };
+      const options = { upsert: false };
+      db.collection("Users").updateOne(filter, newVals, options);
+
+      //resending email
+      let hostURL = "";
+      if (process.env.NODE_ENV === "production") {
+        hostURL = "https://mysteamlist.com";
+      } else {
+        hostURL = "http://localhost:3000";
+      }
+      let url = hostURL + "/verify-email?token=" + token;
+      sendMessage(user.Email, username, url, "verify");
+    }
+  } catch (e) {
+    error = e.toString();
+    res.status(500).json({ Error: error });
+  }
+});
+
 app.post("/api/verify-email", async (req, res, next) => {
-  console.log("API verify was hit!");
   //incoming: token
   //outgoing: error
 
@@ -287,8 +330,6 @@ app.post("/api/verify-email", async (req, res, next) => {
   try {
     const db = client.db("COP4331Cards");
     const user = await db.collection("Users").findOne({ EmailToken: token });
-
-    console.log(user);
 
     if (!user) {
       error = "Token Invalid";
