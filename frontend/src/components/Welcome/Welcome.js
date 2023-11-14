@@ -4,8 +4,8 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import CardLine from "./Cards/CardLine";
-import GameCard from "./Cards/GameCard";
+import CardLine from "../Cards/CardLine";
+import GameCard from "../Cards/GameCard";
 
 function Welcome() {
   const [games, setGames] = useState([]);
@@ -64,7 +64,7 @@ function Welcome() {
         <Col md={6}>
           <Card className="text-center">
             <Card.Body>
-              <Card.Title className="tagline">
+              <Card.Title className="tagline welcome-title">
                 All Your Favorite Games, In One Convenient Place
               </Card.Title>
               <Card.Text className="detail-text">
@@ -77,7 +77,8 @@ function Welcome() {
                   style={{ marginRight: "10px" }}
                   href="register"
                   variant="primary"
-                  className="mr-2">
+                  className="mr-2"
+                >
                   JOIN NOW
                 </Button>
                 <Button href="login" variant="success">
