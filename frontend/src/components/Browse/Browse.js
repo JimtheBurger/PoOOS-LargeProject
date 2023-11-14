@@ -4,7 +4,6 @@ import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import GameCard from "../Cards/GameCard";
 
 function Browse() {
   const [games, setGames] = useState([]);
@@ -139,8 +138,11 @@ function Browse() {
       </Row>
       <Row>
         {filteredGamesByGenre.map((game) => (
-          <Col sm={6} md={3} style={{ marginBottom: "20px" }}>
-            <GameCard game={game} />
+          <Col key={game._id} md={3}>
+            <Card style={cardStyle}>
+              <Card.Img variant="top" src={game.Image} />
+              <Card.Footer>{game.Name}</Card.Footer>
+            </Card>
           </Col>
         ))}
       </Row>
