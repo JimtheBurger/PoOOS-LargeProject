@@ -29,29 +29,29 @@ const TopNav = () => {
         <Navbar.Collapse>
           <Nav className="ms-auto">
             <Nav.Link as={Link} to="/about">
-              about
+              About
             </Nav.Link>
             <Nav.Link as={Link} to="/browse">
-              browse
+              Browse
             </Nav.Link>
             {!user.IsLoggedIn && (
               <Nav.Link as={Link} to="/login">
-                login
+                Login
               </Nav.Link>
             )}
             {!user.IsLoggedIn && (
               <Nav.Link as={Link} to="/register">
-                register
+                Register
               </Nav.Link>
             )}
             {user.IsLoggedIn && (
               <Nav.Link as={Link} to="/profile">
-                profile
+                Profile
               </Nav.Link>
             )}
             {user.IsLoggedIn && (
               <Button variant="outline-accent" onClick={() => handleLogout()}>
-                logout
+                Logout
               </Button>
             )}
           </Nav>
