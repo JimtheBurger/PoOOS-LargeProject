@@ -22,21 +22,17 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.set("port", process.env.PORT || 5000);
 
-var origin = "";
-if (process.env.NODE_ENV == "production") {
-  origin = "https://mysteamlist.com";
-} else {
-  origin = "http://localhost:3000";
-}
-
-console.log(origin);
-
 //Set Headers (allow CORS)
-app.use(cors({ credentials: true, origin: true }));
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000", "https://mysteamlist.com"],
+    exposedHeaders: ["set-cookie"],
+  })
+);
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", origin);
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
