@@ -6,7 +6,7 @@ export async function connectAPI(obj, destination) {
 
   function buildPath(route) {
     if (process.env.NODE_ENV === "production") {
-      return "https://" + app_name + ".herokuapp.com/api/" + route;
+      return "https://mysteamlist.com/api/" + route;
     } else {
       return "http://localhost:5000/api/" + route;
     }
