@@ -5,8 +5,8 @@ const cors = require("cors");
 const axios = require("axios");
 const path = require("path");
 const crypto = require("crypto");
-const igdb = require("igdb-api-node");
-const apicalypse = require("apicalypse");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
 //Environment Variables
 require("dotenv").config();
@@ -22,11 +22,19 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.set("port", process.env.PORT || 5000);
 
+var origin = "";
+if (process.env.NODE_ENV == "production") {
+  origin = "https://mysteamlist.com";
+} else {
+  origin = "http://localhost:3000";
+}
+
 //Set Headers (allow CORS)
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", origin);
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
@@ -40,6 +48,7 @@ app.use((req, res, next) => {
 
 //Sendgrid Setup / Use
 const sgMail = require("@sendgrid/mail");
+const { jwtAuth } = require("./frontend/src/middleware/jwtAuth");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 //msg layout & container function (basic)
@@ -76,18 +85,6 @@ function sendMessage(email, username, url, template) {
     });
 }
 
-///////////////////////////////////////////////////
-// For Heroku deployment
-
-// Server static assets if in production
-if (process.env.NODE_ENV === "production") {
-  // Set static folder
-  app.use(express.static("frontend/build"));
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
-  });
-}
-
 app.post("/api/addGame", async (req, res, next) => {
   //  incoming: title, year, developer, publisher
   //  outgoing: error
@@ -121,28 +118,41 @@ app.post("/api/addGame", async (req, res, next) => {
   res.status(200).json(ret);
 });
 
+//Test authorization midpoint
+app.post("/api/testJWT", jwtAuth, (req, res) => {
+  var error = "";
+  try {
+    error = req.Username;
+  } catch (e) {
+    error = "Could not fetch username from req";
+  }
+  var ret = { Error: error };
+  res.status(200).json(ret);
+});
+
 app.post("/api/login", async (req, res, next) => {
   // incoming: Username, Password
-  // outgoing: Email, DateOfBirth, UserId, error
+  // outgoing: User(obj), token <- jwt (http only cookie), Error : error
 
   var error = "";
-  var id = -1;
-  var email = "";
-  var dob = "";
+  var user = "";
 
   const { username, password } = req.body;
 
   try {
     const db = client.db("COP4331Cards");
-    const results = await db
+    user = await db
       .collection("Users")
-      .find({ Username: username, Password: password })
-      .toArray();
+      .findOne({ Username: username, Password: password });
 
-    if (results.length > 0) {
-      id = results[0].UserId;
-      email = results[0].Email;
-      dob = results[0].DateOfBirth;
+    if (user) {
+      const token = jwt.sign(
+        { Username: user.Username },
+        process.env.JSON_SECRET,
+        { expiresIn: "1h" }
+      );
+      console.log(token);
+      res.cookie("token", token);
     } else {
       error = "Username/Password Combination incorrect";
     }
@@ -150,7 +160,7 @@ app.post("/api/login", async (req, res, next) => {
     error = e.toString();
   }
 
-  var ret = { UserId: id, Email: email, DateOfBirth: dob, Error: error };
+  var ret = { User: user, Error: error };
   res.status(200).json(ret);
 });
 
@@ -503,6 +513,18 @@ app.post('/api/searchcards', async (req, res, next) =>
   res.status(200).json(ret);
 });
 */
+
+///////////////////////////////////////////////////
+// For Heroku deployment
+
+// Server static assets if in production
+if (process.env.NODE_ENV === "production") {
+  // Set static folder
+  app.use(express.static("frontend/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
+  });
+}
 
 const server = app.listen(PORT, () => {
   console.log("Server listening on port " + PORT);

@@ -18,6 +18,7 @@ export async function connectAPI(obj, destination) {
     const response = await fetch(buildPath(destination), {
       method: "POST",
       body: js,
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
     });
 
