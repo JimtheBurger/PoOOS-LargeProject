@@ -1,7 +1,7 @@
 import React from "react";
 
 import TopNav from "../components/TopNav/TopNav";
-import Welcome from "../components/Forms/Welcome";
+import Welcome from "../components/Welcome";
 
 const WelcomePage = () => {
   return (
