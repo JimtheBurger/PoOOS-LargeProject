@@ -1,7 +1,7 @@
 import React from "react";
-import GameCard from "../components/GameCard";
+import GameCard from "../components/Cards/GameCard";
 import TopNav from "../components/TopNav/TopNav";
-import CardLine from "../components/CardLine";
+import CardLine from "../components/Cards/CardLine";
 import { Button } from "react-bootstrap";
 import { connectAPI } from "../components/Forms/connectAPI";
 

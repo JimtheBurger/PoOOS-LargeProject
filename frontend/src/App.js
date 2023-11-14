@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import LoginPage from "./pages/LoginPage";
@@ -10,22 +10,26 @@ import WelcomePage from "./pages/WelcomePage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminAddGames from "./pages/AdminAddGames";
 import BrowsePage from "./pages/BrowsePage";
+import AppContext from "./context/AppContext";
 
 function App() {
+  const [user, setUser] = useState({ Username: "", IsLoggedIn: false });
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<WelcomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/verify-email" element={<VerifyEmailPage />} />
-        <Route path="/resetPassword" element={<ResetPasswordPage />} />
-        <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
-        <Route path="/browse" element={<BrowsePage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/adminAddGames" element={<AdminAddGames />} />
-      </Routes>
-    </BrowserRouter>
+    <AppContext.Provider value={{ user, setUser }}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<WelcomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/resetPassword" element={<ResetPasswordPage />} />
+          <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
+          <Route path="/browse" element={<BrowsePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/adminAddGames" element={<AdminAddGames />} />
+        </Routes>
+      </BrowserRouter>
+    </AppContext.Provider>
   );
 }
 
