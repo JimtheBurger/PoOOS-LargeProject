@@ -266,7 +266,7 @@ app.post("/api/register", async (req, res, next) => {
     if (process.env.NODE_ENV === "production") {
       hostURL = "https://mysteamlist.com";
     } else {
-      hostURL = "https://localhost:3000";
+      hostURL = "http://localhost:3000";
     }
     let url = hostURL + "/verify-email?token=" + token;
     sendMessage(email, username, url, "verify");
