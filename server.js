@@ -29,6 +29,8 @@ if (process.env.NODE_ENV == "production") {
   origin = "http://localhost:3000";
 }
 
+console.log(origin);
+
 //Set Headers (allow CORS)
 app.use(cors({ credentials: true, origin: true }));
 app.use(bodyParser.json());
@@ -152,7 +154,7 @@ app.post("/api/login", async (req, res, next) => {
         { expiresIn: "1h" }
       );
       console.log(token);
-      res.cookie("token", token);
+      res.cookie("token", token, { httpOnly: true });
     } else {
       error = "Username/Password Combination incorrect";
     }
