@@ -9,6 +9,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import WelcomePage from "./pages/WelcomePage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminAddGames from "./pages/AdminAddGames";
+import BrowsePage from "./pages/BrowsePage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/resetPassword" element={<ResetPasswordPage />} />
         <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
+        <Route path="/browse" element={<BrowsePage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/adminAddGames" element={<AdminAddGames />} />
       </Routes>

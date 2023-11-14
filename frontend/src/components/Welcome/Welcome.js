@@ -64,7 +64,7 @@ function Welcome() {
         <Col md={6}>
           <Card className="text-center">
             <Card.Body>
-              <Card.Title className="tagline">
+              <Card.Title className="tagline welcome-title">
                 All Your Favorite Games, In One Convenient Place
               </Card.Title>
               <Card.Text className="detail-text">
