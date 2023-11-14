@@ -1,9 +1,6 @@
 //Connects form values to API and returns server reply as a parsed JSON object.
 //Input a raw object (this function will stringify it) and string api destination (/api/ included)
 export async function connectAPI(obj, destination) {
-  //Our app name on heroku
-  const app_name = "cop4331-g4-ed21fec8c26b";
-
   function buildPath(route) {
     if (process.env.NODE_ENV === "production") {
       return "https://mysteamlist.com/api/" + route;

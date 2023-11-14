@@ -15,6 +15,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import { connectAPI } from "./connectAPI";
+import { Link } from "react-router-dom";
 
 function HookRegister() {
   //yup validation schema
@@ -238,7 +239,7 @@ function HookRegister() {
               )}
             </Card.Body>
             <Card.Footer>
-              Already Have an Account? <a href="/login">Login Here</a>
+              Already Have an Account? <Link to="/login">Login Here</Link>
             </Card.Footer>
           </Card>
         </Col>

@@ -12,9 +12,11 @@ import {
 } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import { connectAPI } from "./connectAPI.js";
+import { Link, useNavigate } from "react-router-dom";
+import AppContext from "../../context/AppContext.js";
 
 function HookLogin() {
   //yup validation schema
@@ -38,6 +40,12 @@ function HookLogin() {
     resolver: yupResolver(validationSchema),
   });
 
+  //Context hook for controlling login context
+  const { user, setUser } = useContext(AppContext);
+
+  //navigation hook for stateful redirect
+  let navigate = useNavigate();
+
   //this is called when the form is submitted
   const formSubmit = async (data) => {
     setIsLoading(true); // Show spinner and disable button
@@ -48,7 +56,10 @@ function HookLogin() {
     if (reply.Error !== "") {
       setLoginError(reply.Error);
     } else {
-      //window.location.href = "/profile";
+      //Log in user and move to profile page
+      setUser({ Username: reply.User.Username, IsLoggedIn: true });
+      console.log(user);
+      navigate("/profile");
     }
 
     setIsLoading(false); // Stop showing spinner and reenable button
@@ -162,7 +173,7 @@ function HookLogin() {
               )}
             </Card.Body>
             <Card.Footer>
-              Don't Have an Account? <a href="/register">Register Here</a>
+              Don't Have an Account? <Link to="/register">Register Here</Link>
             </Card.Footer>
           </Card>
         </Col>

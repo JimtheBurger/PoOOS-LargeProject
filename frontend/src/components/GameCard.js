@@ -11,30 +11,34 @@ function GameCard(props) {
   const [releaseDate, setReleaseDate] = useState("");
   const [appid, setAppID] = useState("");
 
-  async function loadData() {
-    console.log(props.id);
-    var gameObj = await connectAPI({ AppID: props.id }, "searchAppID");
-    console.log(gameObj);
-    if (gameObj.Game) {
-      setName(gameObj.Game.Name);
-      setImageURL(gameObj.Game.Image);
-      setDescription(gameObj.Game.Description);
-      setGenres(gameObj.Game.Genres);
-      setReleaseDate(gameObj.Game.Release.date);
-      setAppID(gameObj.Game.AppID);
+  async function getGameObj(appid) {
+    const game = await connectAPI({ AppID: appid }, "searchAppID");
+    loadData(game.Game);
+  }
+
+  function loadData(gameObj) {
+    if (gameObj) {
+      setName(gameObj.Name);
+      setImageURL(gameObj.Image);
+      setDescription(gameObj.Description);
+      setGenres(gameObj.Genres);
+      setReleaseDate(gameObj.Release.date);
+      setAppID(gameObj.AppID);
     }
   }
 
   //Update items once when initially loaded
   if (props.id && appid === "") {
-    loadData();
+    getGameObj(props.id);
+  } else if (props.game && appid === "") {
+    loadData(props.game);
   }
 
   return (
     <Card>
       <div className="image">
         <Card.Img variant="top" src={imageURL} />
-        <div className="p-3 image__overlay image__overlay--blur">
+        <div className="p-3 image__overlay image__overlay--blur d-none d-md-block">
           {description}
         </div>
       </div>
