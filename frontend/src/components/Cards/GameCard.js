@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Card } from "react-bootstrap";
-import { connectAPI } from "./Forms/connectAPI";
+import { connectAPI } from "../Forms/connectAPI";
 import "./GameCard.css";
 
 function GameCard(props) {
