@@ -35,7 +35,7 @@ function GameCard(props) {
   }
 
   return (
-    <Card>
+    <Card className="shadow">
       <div className="image">
         <Card.Img variant="top" src={imageURL} />
         <div className="p-3 image__overlay image__overlay--blur d-none d-md-block">

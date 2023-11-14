@@ -4,8 +4,8 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import CardLine from "./CardLine";
-import GameCard from "./GameCard";
+import CardLine from "./Cards/CardLine";
+import GameCard from "./Cards/GameCard";
 
 function Welcome() {
   const [games, setGames] = useState([]);
