@@ -8,7 +8,7 @@ const AdminAddGames = () => {
   return (
     <div>
       <TopNav />
-
+      <AdminAddGameBox />
       <AddList />
     </div>
   );
