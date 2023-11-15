@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { useNavigate } from "react-router-dom";
 
 function Browse() {
   const [games, setGames] = useState([]);
@@ -81,6 +82,12 @@ function Browse() {
     margin: "0 10px 50px 10px", // 10px horizontal margin, 50px vertical margin
   };
 
+  const navigate = useNavigate();
+
+  const handleGameClick = (gameAppID) => {
+    navigate(`/game/${gameAppID}`);
+  };
+
   return (
     <Container>
       <Row style={{ marginTop: "60px" }} className="justify-content-left">
@@ -139,7 +146,7 @@ function Browse() {
       <Row>
         {filteredGamesByGenre.map((game) => (
           <Col key={game._id} md={3}>
-            <Card style={cardStyle}>
+            <Card style={cardStyle} onClick={() => handleGameClick(game.AppID)}>
               <Card.Img variant="top" src={game.Image} />
               <Card.Footer>{game.Name}</Card.Footer>
             </Card>

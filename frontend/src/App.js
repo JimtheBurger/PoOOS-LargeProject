@@ -11,6 +11,7 @@ import ProfilePage from "./pages/ProfilePage";
 import AdminAddGames from "./pages/AdminAddGames";
 import BrowsePage from "./pages/BrowsePage";
 import AppContext from "./context/AppContext";
+import GamePage from "./pages/GamePage";
 import ListPage from "./pages/ListPage";
 import BrowseDBPage from "./pages/BrowseDBPage";
 
@@ -39,6 +40,7 @@ function App() {
           <Route path="/browse2" element={<BrowsePage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/adminAddGames" element={<AdminAddGames />} />
+          <Route path="/game/:AppID" element={<GamePage />} />
           <Route path="/list" element={<ListPage />} />
         </Routes>
       </BrowserRouter>
