@@ -202,7 +202,7 @@ app.post("/api/forgotPassword", async (req, res, next) => {
       if (process.env.NODE_ENV === "production") {
         hostURL = "https://mysteamlist.com";
       } else {
-        hostURL = "https://localhost:3000";
+        hostURL = "http://localhost:3000";
       }
       let url = hostURL + "/resetPassword?token=" + token;
       sendMessage(user.Email, user.Username, url, "reset");
@@ -253,7 +253,7 @@ app.post("/api/register", async (req, res, next) => {
     Username: username,
     Password: password,
     Email: email,
-    DateOfBirth: dob,
+    Lists: [],
     Verified: false,
     EmailToken: token,
   };
@@ -447,6 +447,49 @@ app.post("/api/gamedetails", async (req, res, next) => {
     .catch((err) => {
       console.log("Error: ", err.message);
     });
+});
+
+app.post("/api/addList", jwtAuth, async (req, res) => {
+  // incoming : listName, private, allowedUsers, jwtToken
+  // outgoing : Error
+
+  var error = "";
+  var username = req.Username;
+  var { listName, private, allowedUsers } = req.body;
+
+  const usersArr = allowedUsers.split(/\s*(?:,|$)\s*/);
+  usersArr.push(username);
+
+  const newList = {
+    Name: listName,
+    Private: private,
+    Owner: username,
+    ViewableBy: usersArr,
+    Games: [],
+  };
+
+  const db = client.db("COP4331Cards");
+  const user = await db.collection("Users").findOne({ Username: username });
+  if (!user) {
+    error = "Username associated with token invalid";
+  } else {
+    if (!user.Verified) {
+      error = "User unverified";
+    } else {
+      try {
+        objID = (await db.collection("Lists").insertOne(newList)).insertedId;
+        const list = await db.collection("Lists").findOne({ _id: objID });
+        console.log(list.ListId);
+        const filter = { Username: username };
+        const newVals = { $push: { Lists: list.ListId } };
+        const options = { upsert: false };
+        db.collection("Users").updateOne(filter, newVals, options);
+      } catch (e) {
+        error = e.toString();
+      }
+    }
+  }
+  res.status(200).json({ Error: error });
 });
 
 //search ALL games based on name AND genre

@@ -23,5 +23,8 @@
         "jsonwebtoken": "^9.0.2",
         "mongodb": "^6.2.0",
         "supertest": "^6.3.3"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
     }
 }
