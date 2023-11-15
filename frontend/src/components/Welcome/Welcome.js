@@ -77,8 +77,7 @@ function Welcome() {
                   style={{ marginRight: "10px" }}
                   href="register"
                   variant="primary"
-                  className="mr-2"
-                >
+                  className="mr-2">
                   JOIN NOW
                 </Button>
                 <Button href="login" variant="success">
@@ -91,20 +90,20 @@ function Welcome() {
       </Row>
 
       <CardLine title="Strategy">
-        {firstFourStrategyGames.map((game) => (
-          <GameCard game={game} />
+        {firstFourStrategyGames.map((game, index) => (
+          <GameCard game={game} key={index} />
         ))}
       </CardLine>
 
       <CardLine title="Adventure">
-        {firstFourAdventureGames.map((game) => (
-          <GameCard game={game} />
+        {firstFourAdventureGames.map((game, index) => (
+          <GameCard game={game} key={index} />
         ))}
       </CardLine>
 
       <CardLine title="Simulation">
-        {firstFourSimulationGames.map((game) => (
-          <GameCard game={game} />
+        {firstFourSimulationGames.map((game, index) => (
+          <GameCard game={game} key={index} />
         ))}
       </CardLine>
     </Container>

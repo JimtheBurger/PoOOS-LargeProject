@@ -363,6 +363,37 @@ app.post("/api/verify-email", async (req, res, next) => {
   res.status(200).json(ret);
 });
 
+app.post("/api/getGamesFromList", jwtAuth, async (req, res) => {
+  // incoming : listID, jwtToken
+  // outgoing : Games[game{obj}], Title, Error
+
+  var error = "";
+  var user = req.Username;
+  var { listId } = req.body;
+  var games = "";
+  var title = "";
+
+  const db = client.db("COP4331Cards");
+  const list = await db
+    .collection("Lists")
+    .findOne({ ListId: parseInt(listId) });
+
+  if (list) {
+    if (list.Private && !list.ViewableBy.includes(user)) {
+      error = "You do not have access to this list.";
+    } else {
+      title = list.Name;
+      games = await db
+        .collection("Games")
+        .find({ AppID: { $in: list.Games } })
+        .toArray();
+    }
+  } else {
+    error = "No list found.";
+  }
+  res.status(200).json({ Games: games, Title: title, Error: error });
+});
+
 //adds game details into the db based on appID
 app.post("/api/gamedetails", async (req, res, next) => {
   // here are some sample appid's for testing:
@@ -416,6 +447,32 @@ app.post("/api/gamedetails", async (req, res, next) => {
     .catch((err) => {
       console.log("Error: ", err.message);
     });
+});
+
+//search ALL games based on name AND genre
+app.post("/api/searchGames", async (req, res) => {
+  //incoming: Name and Genre
+  //outgoing: Games[{game}], Error
+
+  var error = "";
+  var games = "";
+  var { Name, Genre } = req.body;
+  var params = {};
+
+  if (Name !== "") {
+    params.Name = { $regex: Name, $options: "i" };
+  }
+  if (Genre !== "") {
+    params.Genres = Genre;
+  }
+
+  try {
+    const db = client.db("COP4331Cards");
+    games = await db.collection("Games").find(params).toArray();
+  } catch (e) {
+    error = e.toString();
+  }
+  res.status(200).json({ Games: games, Error: error });
 });
 
 //search games based on game's name
