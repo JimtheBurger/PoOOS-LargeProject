@@ -11,11 +11,12 @@ function ListDisplay({ games, title }) {
         </Col>
       </Row>
       <Row className="g-4">
-        {games.map((game, index) => (
-          <Col lg={4} md={6} xs={6}>
-            <GameCard key={index} game={game} />
-          </Col>
-        ))}
+        {games[0].Name &&
+          games.map((game, index) => (
+            <Col lg={4} md={6} xs={6}>
+              <GameCard key={index} game={game} />
+            </Col>
+          ))}
       </Row>
     </Container>
   );

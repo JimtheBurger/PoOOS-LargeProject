@@ -2,12 +2,18 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import ListDisplay from "./ListDisplay";
 import { connectAPI } from "../Forms/connectAPI";
+import ListSearch from "./ListSearch";
 
 function ListHandler() {
   const [games, setGames] = useState([{}]);
+  const [finalGames, setFinalGames] = useState([{}]);
   const [title, setTitle] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const listId = searchParams.get("listId");
+
+  //search states
+  const [search, setSearch] = useState("");
+  const [genre, setGenre] = useState("");
 
   useEffect(() => {
     async function getGames() {
@@ -16,7 +22,6 @@ function ListHandler() {
         if (reply.Error === "") {
           setGames(reply.Games);
           setTitle(reply.Title);
-          console.log(games);
         } else {
           console.log(reply.Error);
         }
@@ -27,7 +32,24 @@ function ListHandler() {
     getGames();
   }, []);
 
-  return <ListDisplay games={games} title={title} />;
+  useEffect(() => {
+    if (games[0].Name) {
+      setFinalGames(
+        games.filter(
+          (game) =>
+            game.Name.toLowerCase().includes(search.toLowerCase()) &&
+            (genre === "" || game.Genres.includes(genre))
+        )
+      );
+    }
+  }, [search, genre, games]);
+
+  return (
+    <>
+      <ListSearch setSearch={setSearch} setGenre={setGenre} />
+      <ListDisplay games={finalGames} title={title} />
+    </>
+  );
 }
 
 export default ListHandler;
