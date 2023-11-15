@@ -394,59 +394,84 @@ app.post("/api/getGamesFromList", jwtAuth, async (req, res) => {
   res.status(200).json({ Games: games, Title: title, Error: error });
 });
 
+// Read apis into app.post
+
+const events = require("events");
+const fs = require("fs");
+const readline = require("readline");
+
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
 //adds game details into the db based on appID
 app.post("/api/gamedetails", async (req, res, next) => {
   // here are some sample appid's for testing:
   // terraria:  105600
   // celeste:   504230
   // cyberpunk: 1091500
+  //file reader
+  try {
+    const rl = readline.createInterface({
+      input: fs.createReadStream("appids.txt"),
+      crlfDelay: Infinity,
+    });
+
+    for await (const line of rl) {
+      console.log(line);
+      const { appid } = line;
+      var ret;
+      const steam_api_url = `https://store.steampowered.com/api/appdetails?appids=${appid}&l=english`;
+
+      await delay(2000);
+      axios
+        .get(steam_api_url, {
+          "Accept-Language": "en-US",
+        })
+        .then(async (appinfo) => {
+          let i = appinfo.data[appid];
+          let genres = [];
+
+          i.data.genres.forEach((element) => genres.push(element.description));
+
+          ret = {
+            Name: i.data.name,
+            AppID: i.data.steam_appid,
+            Description: i.data.short_description,
+            Image: i.data.header_image,
+            Genres: genres,
+            Price: i.data.price_overview,
+            Developers: i.data.developers,
+            Publishers: i.data.publishers,
+            Platforms: i.data.platforms,
+            Release: i.data.release_date,
+          };
+
+          try {
+            const db = client.db("COP4331Cards");
+            const game = await db
+              .collection("Games")
+              .findOne({ AppID: ret.AppID });
+
+            if (!game) {
+              db.collection("Games").insertOne(ret);
+            }
+          } catch (e) {
+            console.log(e.toString());
+          }
+
+          res.status(200).json(ret);
+        })
+        .catch((err) => {
+          console.log("Error: ", err.message);
+        });
+    }
+
+    await events.once(rl, "close");
+  } catch (err) {
+    console.error(err);
+  }
 
   //incoming: appid
   //outgoing: name, appid, description, image, genres, developers, publishers, platforms, release
-
-  const { appid } = req.body;
-  var ret;
-  const steam_api_url = `https://store.steampowered.com/api/appdetails?appids=${appid}&l=english`;
-
-  axios
-    .get(steam_api_url, {
-      "Accept-Language": "en-US",
-    })
-    .then(async (appinfo) => {
-      let i = appinfo.data[appid];
-      let genres = [];
-
-      i.data.genres.forEach((element) => genres.push(element.description));
-
-      ret = {
-        Name: i.data.name,
-        AppID: i.data.steam_appid,
-        Description: i.data.short_description,
-        Image: i.data.header_image,
-        Genres: genres,
-        Price: i.data.price_overview,
-        Developers: i.data.developers,
-        Publishers: i.data.publishers,
-        Platforms: i.data.platforms,
-        Release: i.data.release_date,
-      };
-
-      try {
-        const db = client.db("COP4331Cards");
-        const game = await db.collection("Games").findOne({ AppID: ret.AppID });
-
-        if (!game) {
-          db.collection("Games").insertOne(ret);
-        }
-      } catch (e) {
-        console.log(e.toString());
-      }
-
-      res.status(200).json(ret);
-    })
-    .catch((err) => {
-      console.log("Error: ", err.message);
-    });
 });
 
 app.post("/api/addList", jwtAuth, async (req, res) => {
