@@ -363,6 +363,39 @@ app.post("/api/verify-email", async (req, res, next) => {
   res.status(200).json(ret);
 });
 
+app.post("/api/getGamesFromList", jwtAuth, async (req, res) => {
+  // incoming : listID, jwtToken
+  // outgoing : Games[game{obj}], Title, Error
+
+  var error = "";
+  var user = req.Username;
+  var { listId } = req.body;
+  var games = "";
+  var title = "";
+
+  console.log(listId, user);
+
+  const db = client.db("COP4331Cards");
+  const list = await db
+    .collection("Lists")
+    .findOne({ ListId: parseInt(listId) });
+
+  if (list) {
+    if (list.Private && !list.ViewableBy.includes(user)) {
+      error = "You do not have access to this list.";
+    } else {
+      title = list.Name;
+      games = await db
+        .collection("Games")
+        .find({ AppID: { $in: list.Games } })
+        .toArray();
+    }
+  } else {
+    error = "No list found.";
+  }
+  res.status(200).json({ Games: games, Title: title, Error: error });
+});
+
 //adds game details into the db based on appID
 app.post("/api/gamedetails", async (req, res, next) => {
   // here are some sample appid's for testing:

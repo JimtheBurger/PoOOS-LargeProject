@@ -11,6 +11,7 @@ import ProfilePage from "./pages/ProfilePage";
 import AdminAddGames from "./pages/AdminAddGames";
 import BrowsePage from "./pages/BrowsePage";
 import AppContext from "./context/AppContext";
+import ListPage from "./pages/ListPage";
 
 function App() {
   const [user, setUser] = useState({ Username: "", IsLoggedIn: false });
@@ -36,6 +37,7 @@ function App() {
           <Route path="/browse" element={<BrowsePage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/adminAddGames" element={<AdminAddGames />} />
+          <Route path="/list" element={<ListPage />} />
         </Routes>
       </BrowserRouter>
     </AppContext.Provider>
