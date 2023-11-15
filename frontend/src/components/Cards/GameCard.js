@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import { connectAPI } from "../Forms/connectAPI";
 import "./GameCard.css";
+import { useNavigate } from "react-router-dom";
 
 function GameCard(props) {
   const [game, setGame] = useState("");
@@ -20,8 +21,14 @@ function GameCard(props) {
     }
   }, [props.game]);
 
+  const navigate = useNavigate();
+
+  const handleGameClick = (gameAppID) => {
+    navigate(`/game/${gameAppID}`);
+  };
+
   return (
-    <Card className="shadow">
+    <Card className="shadow" onClick={() => handleGameClick(game.AppID)}>
       <div className="image">
         <Card.Img variant="top" src={game.Image} />
         <div className="p-3 image__overlay image__overlay--blur d-none d-md-block">
