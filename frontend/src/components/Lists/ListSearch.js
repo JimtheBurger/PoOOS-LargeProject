@@ -8,13 +8,16 @@ function ListSearch({ setSearch, setGenre }) {
           <Card className="text-left ">
             <Card.Body>
               <Card.Title className="tagline welcome-title">Search</Card.Title>
-              <Form className="mb-3">
+              <Form.Group className="mb-3">
                 <Form.Control
                   type="text"
                   placeholder="Enter game name"
                   onChange={(e) => setSearch(e.target.value)}
+                  onSubmit={() => {
+                    return false;
+                  }}
                 />
-              </Form>
+              </Form.Group>
             </Card.Body>
           </Card>
         </Col>

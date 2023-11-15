@@ -12,6 +12,7 @@ import AdminAddGames from "./pages/AdminAddGames";
 import BrowsePage from "./pages/BrowsePage";
 import AppContext from "./context/AppContext";
 import ListPage from "./pages/ListPage";
+import BrowseDBPage from "./pages/BrowseDBPage";
 
 function App() {
   const [user, setUser] = useState({ Username: "", IsLoggedIn: false });
@@ -34,7 +35,8 @@ function App() {
           <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/resetPassword" element={<ResetPasswordPage />} />
           <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
-          <Route path="/browse" element={<BrowsePage />} />
+          <Route path="/browse" element={<BrowseDBPage />} />
+          <Route path="/browse2" element={<BrowsePage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/adminAddGames" element={<AdminAddGames />} />
           <Route path="/list" element={<ListPage />} />

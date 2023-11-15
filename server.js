@@ -373,8 +373,6 @@ app.post("/api/getGamesFromList", jwtAuth, async (req, res) => {
   var games = "";
   var title = "";
 
-  console.log(listId, user);
-
   const db = client.db("COP4331Cards");
   const list = await db
     .collection("Lists")
@@ -449,6 +447,32 @@ app.post("/api/gamedetails", async (req, res, next) => {
     .catch((err) => {
       console.log("Error: ", err.message);
     });
+});
+
+//search ALL games based on name AND genre
+app.post("/api/searchGames", async (req, res) => {
+  //incoming: Name and Genre
+  //outgoing: Games[{game}], Error
+
+  var error = "";
+  var games = "";
+  var { Name, Genre } = req.body;
+  var params = {};
+
+  if (Name !== "") {
+    params.Name = { $regex: Name, $options: "i" };
+  }
+  if (Genre !== "") {
+    params.Genres = Genre;
+  }
+
+  try {
+    const db = client.db("COP4331Cards");
+    games = await db.collection("Games").find(params).toArray();
+  } catch (e) {
+    error = e.toString();
+  }
+  res.status(200).json({ Games: games, Error: error });
 });
 
 //search games based on game's name
