@@ -36,3 +36,7 @@
 .image__overlay:hover > * {
     transform: translateY(0);
 }
+
+.pointer-cursor {
+    cursor: pointer;
+  }
