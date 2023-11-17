@@ -442,7 +442,6 @@ app.post("/api/removeGameFromList", async (req, res, next) => {
 
   var error = "";
   var {listID, appID} = req.body;
-  var check = false;
 
   const db = client.db("COP4331Cards");
   const list = await db
@@ -454,18 +453,9 @@ app.post("/api/removeGameFromList", async (req, res, next) => {
     .findOne({ AppID: parseInt(appID) });
 
   if(list && game){
-    // for(let i = 0; i < list.Games.length; ++i){
-    //   if(JSON.stringify(list.Games[i]) == JSON.stringify(game)){
-    //     check = true;
-    //   }
-    // }
-
     if (list.Private && !list.ViewableBy.includes(user)) {
       error = "You do not have access to this list.";
     }
-    // else if(!check){
-    //   error = "Game is not in this list.";
-    // }
     else{
       db.collection("Lists").updateOne( {ListId: listID}, { $pull: { Games: game } } );
     }
