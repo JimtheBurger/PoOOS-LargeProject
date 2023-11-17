@@ -415,7 +415,7 @@ app.post("/api/addGameToList", async (req, res, next) => {
 
   if(list && game){
     for(let i = 0; i < list.Games.length; ++i){
-      if(list.Games.AppID == parseInt(appID)){
+      if(list.Games[i].AppID == parseInt(appID)){
         check == true;
       }
     }
