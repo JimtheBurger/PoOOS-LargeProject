@@ -467,7 +467,7 @@ app.post("/api/addGameToList", async (req, res, next) => {
   // outgoing: error
 
   var error = "";
-  var {listID, appID} = req.body;
+  var { listID, appID } = req.body;
   var check = false;
 
   const db = client.db("COP4331Cards");
@@ -475,31 +475,29 @@ app.post("/api/addGameToList", async (req, res, next) => {
     .collection("Lists")
     .findOne({ ListId: parseInt(listID) });
 
-  const game = await db
-    .collection("Games")
-    .findOne({ AppID: parseInt(appID) });
+  const game = await db.collection("Games").findOne({ AppID: parseInt(appID) });
 
-  if(list && game){
-    for(let i = 0; i < list.Games.length; ++i){
-      if(JSON.stringify(list.Games[i]) == JSON.stringify(game)){
+  if (list && game) {
+    for (let i = 0; i < list.Games.length; ++i) {
+      if (JSON.stringify(list.Games[i]) == JSON.stringify(game)) {
         check = true;
       }
     }
 
     if (list.Private && !list.ViewableBy.includes(user)) {
       error = "You do not have access to this list.";
-    }
-    else if(check){
+    } else if (check) {
       error = "Game is already in this list.";
+    } else {
+      db.collection("Lists").updateOne(
+        { ListId: listID },
+        { $push: { Games: game } }
+      );
     }
-    else{
-      db.collection("Lists").updateOne( {ListId: listID}, { $push: { Games: game } } );
-    }
-  }
-  else{
+  } else {
     error = "No list/game found,";
   }
-  res.status(200).json({Error: error});
+  res.status(200).json({ Error: error });
 });
 
 app.post("/api/removeGameFromList", async (req, res, next) => {
@@ -507,29 +505,28 @@ app.post("/api/removeGameFromList", async (req, res, next) => {
   // outgoing: error
 
   var error = "";
-  var {listID, appID} = req.body;
+  var { listID, appID } = req.body;
 
   const db = client.db("COP4331Cards");
   const list = await db
     .collection("Lists")
     .findOne({ ListId: parseInt(listID) });
 
-  const game = await db
-    .collection("Games")
-    .findOne({ AppID: parseInt(appID) });
+  const game = await db.collection("Games").findOne({ AppID: parseInt(appID) });
 
-  if(list && game){
+  if (list && game) {
     if (list.Private && !list.ViewableBy.includes(user)) {
       error = "You do not have access to this list.";
+    } else {
+      db.collection("Lists").updateOne(
+        { ListId: listID },
+        { $pull: { Games: game } }
+      );
     }
-    else{
-      db.collection("Lists").updateOne( {ListId: listID}, { $pull: { Games: game } } );
-    }
-  }
-  else{
+  } else {
     error = "No list/game found,";
   }
-  res.status(200).json({Error: error});
+  res.status(200).json({ Error: error });
 });
 
 app.post("/api/changeListSettings", async (req, res, next) => {
@@ -537,21 +534,23 @@ app.post("/api/changeListSettings", async (req, res, next) => {
   //outgoing: error
 
   var error = "";
-  var {listID, invisible} = req.body;
+  var { listID, invisible } = req.body;
 
   const db = client.db("COP4331Cards");
   const list = await db
     .collection("Lists")
     .findOne({ ListId: parseInt(listID) });
 
-  if(list){
-    db.collection("Lists").updateOne({ListId: listID}, {Private: invisible});
-  }
-  else{
+  if (list) {
+    db.collection("Lists").updateOne(
+      { ListId: listID },
+      { Private: invisible }
+    );
+  } else {
     error = "No list found.";
   }
 
-  res.status(200).json({Error: error});
+  res.status(200).json({ Error: error });
 });
 
 //adds game details into the db based on appID
