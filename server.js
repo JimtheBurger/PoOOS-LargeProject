@@ -418,10 +418,9 @@ app.post("/api/addGameToList", async (req, res, next) => {
     var idList = [];
 
     for(let i = 0; i < gamesList.length; ++i){
-      if(gamesList[i].AppID == appID){
+      if(gamesList[i].AppID == parseInt(appID)){
         check == true;
       }
-      idList.push(gamesList[i].AppID);
     }
 
     if (list.Private && !list.ViewableBy.includes(user)) {
