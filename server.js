@@ -416,11 +416,11 @@ app.post("/api/addGameToList", async (req, res, next) => {
   if(list && game){
     var gamesList = list.Games;
 
-    for(let i = 0; i < gamesList.length; ++i){
-      if(gamesList[i].AppID == parseInt(appID)){
-        check == true;
-      }
-    }
+    // for(let i = 0; i < gamesList.length; ++i){
+    //   if(gamesList[i].AppID == parseInt(appID)){
+    //     check == true;
+    //   }
+    // }
 
     if (list.Private && !list.ViewableBy.includes(user)) {
       error = "You do not have access to this list.";
@@ -435,7 +435,7 @@ app.post("/api/addGameToList", async (req, res, next) => {
   else{
     error = "No list/game found,";
   }
-  res.status(200).json({Error: error, Games: gamesList, AppID, appID});
+  res.status(200).json({Error: error, Games: gamesList});
 });
 
 // Read apis into app.post
