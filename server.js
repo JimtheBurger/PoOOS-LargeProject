@@ -83,6 +83,7 @@ function sendMessage(email, username, url, template) {
     });
 }
 
+/*
 app.post("/api/addGame", async (req, res, next) => {
   //  incoming: title, year, developer, publisher
   //  outgoing: error
@@ -115,6 +116,7 @@ app.post("/api/addGame", async (req, res, next) => {
   var ret = { error: error };
   res.status(200).json(ret);
 });
+*/
 
 //Test authorization midpoint
 app.post("/api/testJWT", jwtAuth, (req, res) => {
@@ -460,7 +462,97 @@ app.post("/api/getGamesFromList", jwtAuth, async (req, res) => {
     .json({ Games: games, Title: title, Owner: owner, Error: error });
 });
 
-// Read apis into app.post
+app.post("/api/addGameToList", async (req, res, next) => {
+  // incoming: listID, appID
+  // outgoing: error
+
+  var error = "";
+  var {listID, appID} = req.body;
+  var check = false;
+
+  const db = client.db("COP4331Cards");
+  const list = await db
+    .collection("Lists")
+    .findOne({ ListId: parseInt(listID) });
+
+  const game = await db
+    .collection("Games")
+    .findOne({ AppID: parseInt(appID) });
+
+  if(list && game){
+    for(let i = 0; i < list.Games.length; ++i){
+      if(JSON.stringify(list.Games[i]) == JSON.stringify(game)){
+        check = true;
+      }
+    }
+
+    if (list.Private && !list.ViewableBy.includes(user)) {
+      error = "You do not have access to this list.";
+    }
+    else if(check){
+      error = "Game is already in this list.";
+    }
+    else{
+      db.collection("Lists").updateOne( {ListId: listID}, { $push: { Games: game } } );
+    }
+  }
+  else{
+    error = "No list/game found,";
+  }
+  res.status(200).json({Error: error});
+});
+
+app.post("/api/removeGameFromList", async (req, res, next) => {
+  // incoming: listID, appID
+  // outgoing: error
+
+  var error = "";
+  var {listID, appID} = req.body;
+
+  const db = client.db("COP4331Cards");
+  const list = await db
+    .collection("Lists")
+    .findOne({ ListId: parseInt(listID) });
+
+  const game = await db
+    .collection("Games")
+    .findOne({ AppID: parseInt(appID) });
+
+  if(list && game){
+    if (list.Private && !list.ViewableBy.includes(user)) {
+      error = "You do not have access to this list.";
+    }
+    else{
+      db.collection("Lists").updateOne( {ListId: listID}, { $pull: { Games: game } } );
+    }
+  }
+  else{
+    error = "No list/game found,";
+  }
+  res.status(200).json({Error: error});
+});
+
+app.post("/api/changeListSettings", async (req, res, next) => {
+  //incoming: listID, invisible
+  //outgoing: error
+
+  var error = "";
+  var {listID, invisible} = req.body;
+
+  const db = client.db("COP4331Cards");
+  const list = await db
+    .collection("Lists")
+    .findOne({ ListId: parseInt(listID) });
+
+  if(list){
+    db.collection("Lists").updateOne({ListId: listID}, {Private: invisible});
+  }
+  else{
+    error = "No list found.";
+  }
+
+  res.status(200).json({Error: error});
+});
 
 //adds game details into the db based on appID
 app.post("/api/gamedetails", async (req, res, next) => {
