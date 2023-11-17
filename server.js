@@ -414,8 +414,10 @@ app.post("/api/addGameToList", async (req, res, next) => {
     .findOne({ AppID: parseInt(appID) });
 
   if(list && game){
-    for(let i = 0; i < list.Games.length; ++i){
-      if(list.Games[i].AppID == parseInt(appID)){
+    var gamesList = list.Games;
+
+    for(let i = 0; i < gamesList.length; ++i){
+      if(gamesList[i].AppID == parseInt(appID)){
         check == true;
       }
     }
@@ -433,7 +435,7 @@ app.post("/api/addGameToList", async (req, res, next) => {
   else{
     error = "No list/game found,";
   }
-  res.status(200).json({Error: error});
+  res.status(200).json({Error: error, Games: gamesList});
 });
 
 // Read apis into app.post
