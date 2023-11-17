@@ -415,7 +415,7 @@ app.post("/api/addGameToList", async (req, res, next) => {
 
   if(list && game){
     for(let i = 0; i < list.Games.length; ++i){
-      if(list.Games[i] == game){
+      if(JSON.stringify(list.Games[i]) == JSON.stringify(game)){
         check = true;
       }
     }
