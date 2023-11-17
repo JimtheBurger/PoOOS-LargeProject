@@ -466,7 +466,27 @@ app.post("/api/removeGameFromList", async (req, res, next) => {
   res.status(200).json({Error: error});
 });
 
-// Read apis into app.post
+app.post("/api/changeListSettings", async (req, res, next) => {
+  //incoming: listID, invisible
+  //outgoing: error
+
+  var error = "";
+  var {listID, invisible} = req.body;
+
+  const db = client.db("COP4331Cards");
+  const list = await db
+    .collection("Lists")
+    .findOne({ ListId: parseInt(listID) });
+
+  if(list){
+    db.collection("Lists").updateOne({ListId: listID}, {Private: invisible});
+  }
+  else{
+    error = "No list found.";
+  }
+
+  res.status(200).json({Error: error});
+});
 
 //adds game details into the db based on appID
 app.post("/api/gamedetails", async (req, res, next) => {
