@@ -415,7 +415,6 @@ app.post("/api/addGameToList", async (req, res, next) => {
 
   if(list && game){
     var gamesList = list.Games;
-    var idList = [];
 
     for(let i = 0; i < gamesList.length; ++i){
       if(gamesList[i].AppID == parseInt(appID)){
@@ -436,7 +435,7 @@ app.post("/api/addGameToList", async (req, res, next) => {
   else{
     error = "No list/game found,";
   }
-  res.status(200).json({Error: error, Games: gamesList, IDLIST: idList, AppID, appID});
+  res.status(200).json({Error: error, Games: gamesList, AppID, appID});
 });
 
 // Read apis into app.post
