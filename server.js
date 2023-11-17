@@ -500,6 +500,7 @@ app.post("/api/addGameToList", async (req, res, next) => {
   res.status(200).json({ Error: error });
 });
 
+/*
 app.post("/api/removeGameFromList", async (req, res, next) => {
   // incoming: listID, appID
   // outgoing: error
@@ -528,6 +529,7 @@ app.post("/api/removeGameFromList", async (req, res, next) => {
   }
   res.status(200).json({ Error: error });
 });
+*/
 
 app.post("/api/changeListSettings", async (req, res, next) => {
   //incoming: listID, invisible
