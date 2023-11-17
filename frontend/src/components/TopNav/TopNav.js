@@ -14,7 +14,7 @@ const TopNav = () => {
 
   const handleLogout = async () => {
     let error = await connectAPI({ empty: "empty" }, "logout");
-    setUser({ Username: "", IsLoggedIn: false });
+    setUser({ Username: "", ListInfo: "", IsLoggedIn: false });
     navigate("/");
   };
 

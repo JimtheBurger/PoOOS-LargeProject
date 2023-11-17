@@ -16,10 +16,18 @@ import ListPage from "./pages/ListPage";
 import BrowseDBPage from "./pages/BrowseDBPage";
 
 function App() {
-  const [user, setUser] = useState({ Username: "", IsLoggedIn: false });
+  const [user, setUser] = useState({
+    Username: "",
+    ListInfo: "",
+    IsLoggedIn: false,
+  });
 
   useEffect(() => {
-    setUser(JSON.parse(window.localStorage.getItem("state")));
+    if (window.localStorage.getItem("state") !== null) {
+      setUser(JSON.parse(window.localStorage.getItem("state")));
+    } else {
+      window.localStorage.setItem("state", JSON.stringify(user));
+    }
   }, []);
 
   useEffect(() => {

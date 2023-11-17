@@ -71,8 +71,7 @@ function Game() {
           </Row>
           <Button
             style={{ marginTop: "10px", marginRight: "5px" }}
-            variant="purple"
-          >
+            variant="purple">
             Add to List <i className="bi bi-caret-down-fill"></i>
           </Button>
           <Button style={{ marginTop: "10px" }} variant="warning">

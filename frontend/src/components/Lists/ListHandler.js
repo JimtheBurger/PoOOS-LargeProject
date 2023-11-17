@@ -8,6 +8,7 @@ function ListHandler() {
   const [games, setGames] = useState([{}]);
   const [finalGames, setFinalGames] = useState([{}]);
   const [title, setTitle] = useState("");
+  const [owner, setOwner] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const listId = searchParams.get("listId");
 
@@ -22,6 +23,7 @@ function ListHandler() {
         if (reply.Error === "") {
           setGames(reply.Games);
           setTitle(reply.Title);
+          setOwner(reply.Owner);
         } else {
           console.log(reply.Error);
         }
@@ -47,7 +49,12 @@ function ListHandler() {
   return (
     <>
       <ListSearch setSearch={setSearch} setGenre={setGenre} />
-      <ListDisplay games={finalGames} title={title} />
+      <ListDisplay
+        games={finalGames}
+        title={title}
+        owner={owner}
+        listId={listId}
+      />
     </>
   );
 }

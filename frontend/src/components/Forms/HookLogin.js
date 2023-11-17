@@ -56,8 +56,13 @@ function HookLogin() {
     if (reply.Error !== "") {
       setLoginError(reply.Error);
     } else {
-      //Log in user and move to profile page
-      setUser({ Username: reply.User.Username, IsLoggedIn: true });
+      //Log in user
+      setUser({
+        Username: reply.User.Username,
+        ListInfo: reply.ListInfo,
+        IsLoggedIn: true,
+      });
+
       console.log(user);
       navigate("/profile");
     }

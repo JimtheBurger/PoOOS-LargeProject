@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Card } from "react-bootstrap";
 import { connectAPI } from "../Forms/connectAPI";
 import "./GameCard.css";
+import AppContext from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import AddButton from "../Forms/ListForms/AddButton";
+import RemoveButton from "../Forms/ListForms/RemoveButton";
 
 function GameCard(props) {
   const [game, setGame] = useState("");
+  const { user } = useContext(AppContext);
 
   async function getGameObj(appid) {
     const game = await connectAPI({ AppID: appid }, "searchAppID");
@@ -28,17 +32,28 @@ function GameCard(props) {
   };
 
   return (
-    <Card
-      className="shadow pointer-cursor"
-      onClick={() => handleGameClick(game.AppID)}
-    >
+    <Card className="shadow pointer-cursor h-100">
       <div className="image">
         <Card.Img variant="top" src={game.Image} />
         <div className="p-3 image__overlay image__overlay--blur d-none d-md-block">
           {game.Description}
         </div>
       </div>
-      <Card.Footer>{game.Name}</Card.Footer>
+      <Card.Body onClick={() => handleGameClick(game.AppID)}>
+        {game.Name}
+      </Card.Body>
+
+      <Card.Footer className="d-flex justify-content-between">
+        {user.IsLoggedIn && <AddButton appid={game.AppID} />}
+        {user.Username === props.owner && (
+          <RemoveButton
+            appid={game.AppID}
+            name={game.Name}
+            list={props.title}
+            listId={parseInt(props.listId)}
+          />
+        )}
+      </Card.Footer>
     </Card>
   );
 }

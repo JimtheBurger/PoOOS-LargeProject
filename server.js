@@ -130,10 +130,12 @@ app.post("/api/testJWT", jwtAuth, (req, res) => {
 
 app.post("/api/login", async (req, res, next) => {
   // incoming: Username, Password
-  // outgoing: User(obj), token <- jwt (http only cookie), Error : error
+  // outgoing: User(obj), ListInfo ({Name, ListId}), Error
+  // Also sets cookie named token <- jwt (http only cookie),
 
   var error = "";
   var user = "";
+  var lists = "";
 
   const { username, password } = req.body;
 
@@ -141,7 +143,10 @@ app.post("/api/login", async (req, res, next) => {
     const db = client.db("COP4331Cards");
     user = await db
       .collection("Users")
-      .findOne({ Username: username, Password: password });
+      .findOne(
+        { Username: username, Password: password },
+        { Username: 1, Lists: 1, _id: 0 }
+      );
 
     if (user) {
       const token = jwt.sign(
@@ -149,8 +154,17 @@ app.post("/api/login", async (req, res, next) => {
         process.env.JSON_SECRET,
         { expiresIn: "1h" }
       );
-      console.log(token);
       res.cookie("token", token, { httpOnly: true });
+
+      if (user.Lists) {
+        lists = await db
+          .collection("Lists")
+          .find({ ListId: { $in: user.Lists } })
+          .project({ Name: 1, ListId: 1, _id: 0 })
+          .toArray();
+      }
+
+      console.log(lists);
     } else {
       error = "Username/Password Combination incorrect";
     }
@@ -158,7 +172,7 @@ app.post("/api/login", async (req, res, next) => {
     error = e.toString();
   }
 
-  var ret = { User: user, Error: error };
+  var ret = { User: user, ListInfo: lists, Error: error };
   res.status(200).json(ret);
 });
 
@@ -241,12 +255,60 @@ app.post("/api/resetPassword", async (req, res, next) => {
   res.status(200).json(ret);
 });
 
+app.post("/api/gameInList", jwtAuth, async (req, res) => {
+  //takes in AppID, jwt
+  //returns a multi-select formatted array which are list ID/Name pairs where the game is and isn't
+  //array valid with react-select
+
+  var username = req.Username;
+  var { AppID } = req.body;
+
+  var error = "";
+  var options = [];
+
+  if (!username) {
+    error = "Invalid token";
+  } else if (!AppID) {
+    error = "No appid specified...";
+  } else {
+    try {
+      const db = client.db("COP4331Cards");
+      user = await db
+        .collection("Users")
+        .findOne({ Username: username }, { Username: 1, Lists: 1, _id: 0 });
+
+      if (user.Lists) {
+        lists = await db
+          .collection("Lists")
+          .find({ ListId: { $in: user.Lists } })
+          .project({ Name: 1, ListId: 1, Games: 1, _id: 0 })
+          .toArray();
+
+        lists.forEach((list) => {
+          if (list.Games.includes(AppID)) {
+            options.push({
+              label: list.Name,
+              value: list.ListId,
+              disabled: true,
+            });
+          } else {
+            options.push({ label: list.Name, value: list.ListId });
+          }
+        });
+      }
+    } catch (e) {
+      error = e.toString();
+    }
+  }
+  var ret = { Options: options, Error: error };
+  res.status(200).json(ret);
+});
+
 app.post("/api/register", async (req, res, next) => {
   //  incoming: username, password, email, dob
   //  outgoing: Error
 
   var error = "";
-  var dob = "01/12/2345";
   var token = crypto.randomBytes(64).toString("hex");
   const { username, password, email } = req.body;
   const newUser = {
@@ -365,13 +427,14 @@ app.post("/api/verify-email", async (req, res, next) => {
 
 app.post("/api/getGamesFromList", jwtAuth, async (req, res) => {
   // incoming : listID, jwtToken
-  // outgoing : Games[game{obj}], Title, Error
+  // outgoing : Games[game{obj}], Title, Owner, Error
 
   var error = "";
   var user = req.Username;
   var { listId } = req.body;
   var games = "";
   var title = "";
+  var owner = "";
 
   const db = client.db("COP4331Cards");
   const list = await db
@@ -383,6 +446,7 @@ app.post("/api/getGamesFromList", jwtAuth, async (req, res) => {
       error = "You do not have access to this list.";
     } else {
       title = list.Name;
+      owner = list.Owner;
       games = await db
         .collection("Games")
         .find({ AppID: { $in: list.Games } })
@@ -391,7 +455,9 @@ app.post("/api/getGamesFromList", jwtAuth, async (req, res) => {
   } else {
     error = "No list found.";
   }
-  res.status(200).json({ Games: games, Title: title, Error: error });
+  res
+    .status(200)
+    .json({ Games: games, Title: title, Owner: owner, Error: error });
 });
 
 // Read apis into app.post
@@ -451,6 +517,89 @@ app.post("/api/gamedetails", async (req, res, next) => {
     });
 });
 
+app.post("/api/removeGameFromList", jwtAuth, async (req, res) => {
+  // incoming : AppID and ListId to delete, jwt for authentication
+  // outgoing : Error
+
+  var error = "";
+  var username = req.Username;
+  var { ListId, AppID } = req.body;
+
+  console.log(ListId, AppID);
+
+  if (!ListId) {
+    error = "No List Specified";
+  } else if (!AppID) {
+    error = "No AppID specified";
+  }
+
+  try {
+    const db = client.db("COP4331Cards");
+    const user = await db.collection("Users").findOne({ Username: username });
+    if (!user) {
+      error = "Username associated with token invalid";
+    } else {
+      list = await db.collection("Lists").findOne({ ListId: ListId });
+      if (list.Owner === username) {
+        var filter = { ListId: ListId };
+        var newVals = { $pull: { Games: AppID } };
+        var options = { upsert: false };
+        db.collection("Lists").updateOne(filter, newVals, options);
+      } else {
+        error += "You do not own list number " + list.ListId + "\n";
+      }
+    }
+  } catch (e) {
+    error = e.toString();
+  }
+  res.status(200).json({ Error: error });
+});
+
+app.post("/api/addGameToLists", jwtAuth, async (req, res) => {
+  // incoming : Selected array of objects {label : ListName, value : ListId}, AppID, JWT
+  // outgoing : Error
+
+  var error = "";
+  var username = req.Username;
+  var { Selected, AppID } = req.body;
+
+  if (!Selected) {
+    error = "No Selected array found";
+  } else if (!AppID) {
+    error = "No AppID specified";
+  }
+
+  try {
+    const db = client.db("COP4331Cards");
+    const user = await db.collection("Users").findOne({ Username: username });
+    if (!user) {
+      error = "Username associated with token invalid";
+    } else {
+      const gameObj = await db.collection("Games").findOne({ AppID: AppID });
+      if (!gameObj) {
+        error = "Invalid AppID specified";
+      } else {
+        Selected.forEach(async (item) => {
+          list = await db.collection("Lists").findOne({ ListId: item.value });
+          if (list.Owner === username) {
+            var filter = { ListId: item.value };
+            var newVals = { $push: { Games: AppID } };
+            var options = { upsert: false };
+            db.collection("Lists").updateOne(filter, newVals, options);
+          } else {
+            error += "You do not own list number " + list.ListId + "\n";
+          }
+        });
+      }
+    }
+  } catch (e) {
+    error = e.toString();
+  }
+  res.status(200).json({ Error: error });
+});
+
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
 app.post("/api/addList", jwtAuth, async (req, res) => {
   // incoming : listName, private, allowedUsers, jwtToken
   // outgoing : Error
@@ -468,6 +617,7 @@ app.post("/api/addList", jwtAuth, async (req, res) => {
     Owner: username,
     ViewableBy: usersArr,
     Games: [],
+    Added: false,
   };
 
   const db = client.db("COP4331Cards");
@@ -480,12 +630,34 @@ app.post("/api/addList", jwtAuth, async (req, res) => {
     } else {
       try {
         objID = (await db.collection("Lists").insertOne(newList)).insertedId;
-        const list = await db.collection("Lists").findOne({ _id: objID });
-        console.log(list.ListId);
-        const filter = { Username: username };
-        const newVals = { $push: { Lists: list.ListId } };
-        const options = { upsert: false };
-        db.collection("Users").updateOne(filter, newVals, options);
+        console.log(objID);
+        list = await db.collection("Lists").findOne({ _id: objID });
+        var attempt = 1;
+        while (!list.ListId && attempt < 10) {
+          attempt += attempt + 1;
+          console.log("trying...");
+          await delay(500);
+          list = await db.collection("Lists").findOne({ _id: objID });
+        }
+        if (!list.ListId) {
+          error =
+            "An error occurred trying to create the list, please try again";
+          db.collection("Lists").deleteMany({
+            Owner: username,
+            Name: listName,
+            Added: false,
+          });
+        } else {
+          console.log("Created List with ID of", list.ListId);
+          var filter = { Username: username };
+          var newVals = { $push: { Lists: list.ListId } };
+          var options = { upsert: false };
+          db.collection("Users").updateOne(filter, newVals, options);
+          filter = { ListId: list.ListId };
+          newVals = { $set: { Added: true } };
+          options = { upsert: false };
+          db.collection("Lists").updateOne(filter, newVals, options);
+        }
       } catch (e) {
         error = e.toString();
       }
@@ -580,97 +752,6 @@ app.get("/api/games", async (req, res, next) => {
   }
 });
 
-// app.post("/api/searchGamesIGDB", async (req, res, next) => {
-//   //incoming: name, CLIENT_ID, ACCESS_TOKEN
-//   //outgoing: id, name
-
-//   const { GAME_NAME, CLIENT_ID, ACCESS_TOKEN } = req.body;se
-//   // const api_url = `https://api.igdb.com/v4/games`;
-
-//   // fetch(
-//   //   api_url,
-//   //   { method: 'POST',
-//   //     headers: {
-//   //       'Accept': 'application/json'
-//   //     },
-//   //     body: `fields name; search "${GAME_NAME}"; limit 10;`
-//   // })
-//   //   .then(response => {
-//   //     res.status(200).json(response);
-//   //   })
-//   //   .catch(err => {
-//   //       console.error(err);
-//   //   });
-
-//   wrapper = igdb(
-//     "nolwnm8zi98nzj7l2mf2pnskfxptys",
-//     "92bvh6gsx4ifkjutp0npr6rtm4sug5"
-//   );
-
-//   const response = await wrapper
-//     .fields("name")
-//     .search("mario")
-//     .request("/games");
-
-//   res.status(200).json(response);
-// });
-
-// app.post("/api/getSteamGames", async (req, res, next) => {
-//   const api_url =
-//     "https://api.steampowered.com/ISteamApps/GetAppList/v2/?format=json&jsonp";
-//   axios
-//     .get(api_url)
-//     .then((response) => {
-//       res.status(200);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// });
-
-// app.post("/api/searchSteamID", async (req, res, next) => {
-//   //incoming: IGDB_ID, CLIENT_ID, ACCESS_TOKEN
-//   //outgoing: STEAM_ID
-
-//   const { IGDB_ID, CLIENT_ID, ACCESS_TOKEN } = req.body;
-//   const api_url = `https://api.igdb.com/v4/websites`;
-
-//   fetch(api_url, {
-//     method: "POST",
-//   })
-//     .then((response) => {
-//       res.status(200).json(response.json());
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//     });
-// });
-/*
-app.post('/api/searchcards', async (req, res, next) => 
-{
-  // incoming: userId, search
-  // outgoing: results[], error
-
-  var error = '';
-
-  const { userId, search } = req.body;
-
-  var _search = search.trim();
-  
-  const db = client.db('COP4331Cards');
-  const results = await db.collection('Cards').find({"Card":{$regex:_search+'.*', $options:'i'}}).toArray();
-  
-  var _ret = [];
-  for( var i=0; i<results.length; i++ )
-  {
-    _ret.push( results[i].Card );
-  }
-  
-  var ret = {results:_ret, error:error};
-  res.status(200).json(ret);
-});
-*/
-
 ///////////////////////////////////////////////////
 // For Heroku deployment
 
@@ -688,3 +769,7 @@ const server = app.listen(PORT, () => {
 });
 
 module.exports = server; // allow testing script to access the server
+
+//Quick clear command for testing
+//const db = client.db("COP4331Cards");
+//db.collection("Users").deleteMany({});
