@@ -20,11 +20,20 @@ function App() {
     User: { Username: "", Email: "", Lists: [] },
     ListInfo: "",
     IsLoggedIn: false,
+    expiry: "",
   });
 
   useEffect(() => {
-    if (window.localStorage.getItem("state") !== null) {
-      setUser(JSON.parse(window.localStorage.getItem("state")));
+    console.log("getting user...");
+    const checkState = JSON.parse(window.localStorage.getItem("state"));
+    if (checkState) {
+      const now = new Date();
+      if (now.getTime() < checkState.expiry) {
+        setUser(checkState);
+      } else {
+        console.log("Expired Login: ", now.getTime(), checkState.expiry);
+        window.localStorage.setItem("state", JSON.stringify(user));
+      }
     } else {
       window.localStorage.setItem("state", JSON.stringify(user));
     }

@@ -1,8 +1,25 @@
 import { Stack, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { connectAPI } from "../Forms/connectAPI";
 
-export default function ListMenu({ listInfo, setSearchParams }) {
+export default function ListMenu() {
+  const [listInfo, setListInfo] = useState([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function getLists() {
+      const reply = await connectAPI({ Empty: "empty" }, "getLists");
+      console.log(reply);
+      if (reply.Error !== "") {
+        setError(reply.Error);
+      } else {
+        setListInfo(reply.listInfo);
+      }
+    }
+    getLists();
+  }, []);
+
   return (
     <Card
       className="shadow mx-auto my-5"
@@ -11,8 +28,12 @@ export default function ListMenu({ listInfo, setSearchParams }) {
       <Card.Body>
         {listInfo.length > 0 ? (
           <Stack gap={1}>
-            {listInfo.map(({ ListId, Name }) => {
-              return <a href={"/list/" + ListId.toString()}>{Name}</a>;
+            {listInfo.map(({ ListId, Name }, index) => {
+              return (
+                <a key={index} href={"/list/" + ListId.toString()}>
+                  {Name}
+                </a>
+              );
             })}
           </Stack>
         ) : (

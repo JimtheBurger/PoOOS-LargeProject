@@ -79,7 +79,7 @@ function ListHandler() {
               login <Link to="/login">here.</Link>
             </Alert>
           )}
-          {user.IsLoggedIn && <ListMenu listInfo={user.ListInfo} />}
+          {user.IsLoggedIn && <ListMenu />}
         </Container>
       )}
     </>

@@ -130,9 +130,35 @@ app.post("/api/testJWT", jwtAuth, (req, res) => {
   res.status(200).json(ret);
 });
 
+app.post("/api/getLists", jwtAuth, async (req, res) => {
+  // incoming jwt
+  // outgoing ListInfo ({Name, ListId}), Error
+
+  var username = req.Username;
+  var error = "";
+  var listInfo = "";
+
+  try {
+    const db = client.db("COP4331Cards");
+    user = await db.collection("Users").findOne({ Username: username });
+    if (user.Lists) {
+      listInfo = await db
+        .collection("Lists")
+        .find({ ListId: { $in: user.Lists } })
+        .project({ Name: 1, ListId: 1, _id: 0 })
+        .toArray();
+    } else {
+      error = "Token Username Invalid";
+    }
+  } catch (e) {
+    error = e.toString();
+  }
+  res.status(200).json({ listInfo: listInfo, Error: error });
+});
+
 app.post("/api/login", async (req, res, next) => {
   // incoming: Username, Password
-  // outgoing: User(obj), ListInfo ({Name, ListId}), Error
+  // outgoing: User(obj), Error
   // Also sets cookie named token <- jwt (http only cookie),
 
   var error = "";
@@ -145,10 +171,7 @@ app.post("/api/login", async (req, res, next) => {
     const db = client.db("COP4331Cards");
     user = await db
       .collection("Users")
-      .findOne(
-        { Username: username, Password: password },
-        { Password: 0, Lists: 0, _id: 0 }
-      );
+      .findOne({ Username: username, Password: password });
 
     if (user) {
       const token = jwt.sign(
@@ -157,16 +180,6 @@ app.post("/api/login", async (req, res, next) => {
         { expiresIn: "1h" }
       );
       res.cookie("token", token, { httpOnly: true });
-
-      if (user.Lists) {
-        lists = await db
-          .collection("Lists")
-          .find({ ListId: { $in: user.Lists } })
-          .project({ Name: 1, ListId: 1, _id: 0 })
-          .toArray();
-      }
-
-      console.log(lists);
     } else {
       error = "Username/Password Combination incorrect";
     }
@@ -457,6 +470,7 @@ app.post("/api/getGamesFromList", jwtAuth, async (req, res) => {
   res.status(200).json({ Games: games, ListInfo: listInfo, Error: error });
 });
 
+/*
 app.post("/api/addGameToList", async (req, res, next) => {
   // incoming: listID, appID
   // outgoing: error
@@ -494,57 +508,34 @@ app.post("/api/addGameToList", async (req, res, next) => {
   }
   res.status(200).json({ Error: error });
 });
-
-/*
-app.post("/api/removeGameFromList", async (req, res, next) => {
-  // incoming: listID, appID
-  // outgoing: error
-
-  var error = "";
-  var { listID, appID } = req.body;
-
-  const db = client.db("COP4331Cards");
-  const list = await db
-    .collection("Lists")
-    .findOne({ ListId: parseInt(listID) });
-
-  const game = await db.collection("Games").findOne({ AppID: parseInt(appID) });
-
-  if (list && game) {
-    if (list.Private && !list.ViewableBy.includes(user)) {
-      error = "You do not have access to this list.";
-    } else {
-      db.collection("Lists").updateOne(
-        { ListId: listID },
-        { $pull: { Games: game } }
-      );
-    }
-  } else {
-    error = "No list/game found,";
-  }
-  res.status(200).json({ Error: error });
-});
 */
 
-app.post("/api/changeListSettings", async (req, res, next) => {
+app.post("/api/editList", jwtAuth, async (req, res) => {
   //incoming: listID, invisible
   //outgoing: error
 
   var error = "";
-  var { listID, invisible } = req.body;
+  var username = req.Username;
+  var { listId, listName, private, allowedUsers } = req.body;
 
-  const db = client.db("COP4331Cards");
-  const list = await db
-    .collection("Lists")
-    .findOne({ ListId: parseInt(listID) });
+  try {
+    const db = client.db("COP4331Cards");
+    const list = await db
+      .collection("Lists")
+      .findOne({ ListId: parseInt(listId) });
 
-  if (list) {
-    db.collection("Lists").updateOne(
-      { ListId: listID },
-      { Private: invisible }
-    );
-  } else {
-    error = "No list found.";
+    if (list) {
+      var filter = { ListId: listId };
+      var newVals = {
+        $set: { Name: listName, Private: private, AllowedUsers: allowedUsers },
+      };
+      var options = { upsert: false };
+      db.collection("Lists").updateOne(filter, newVals, options);
+    } else {
+      error = "No list found.";
+    }
+  } catch (e) {
+    error = e.toString();
   }
 
   res.status(200).json({ Error: error });
@@ -723,7 +714,6 @@ app.post("/api/addList", jwtAuth, async (req, res) => {
         var attempt = 1;
         while (!list.ListId && attempt < 10) {
           attempt += attempt + 1;
-          console.log("trying...");
           await delay(500);
           list = await db.collection("Lists").findOne({ _id: objID });
         }

@@ -57,13 +57,15 @@ function HookLogin() {
       setLoginError(reply.Error);
     } else {
       //Log in user
+
+      const now = new Date();
+
       setUser({
         User: reply.User,
         ListInfo: reply.ListInfo,
         IsLoggedIn: true,
+        expiry: now.getTime() + 60 * 60 * 1000,
       });
-
-      console.log(user);
       navigate("/profile");
     }
 
