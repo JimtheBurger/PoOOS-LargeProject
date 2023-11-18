@@ -434,9 +434,7 @@ app.post("/api/getGamesFromList", jwtAuth, async (req, res) => {
   var error = "";
   var user = req.Username;
   var { listId } = req.body;
-  var games = "";
-  var title = "";
-  var owner = "";
+  var listInfo = "";
 
   const db = client.db("COP4331Cards");
   const list = await db
@@ -447,8 +445,7 @@ app.post("/api/getGamesFromList", jwtAuth, async (req, res) => {
     if (list.Private && !list.ViewableBy.includes(user)) {
       error = "You do not have access to this list.";
     } else {
-      title = list.Name;
-      owner = list.Owner;
+      listInfo = list;
       games = await db
         .collection("Games")
         .find({ AppID: { $in: list.Games } })
@@ -457,9 +454,7 @@ app.post("/api/getGamesFromList", jwtAuth, async (req, res) => {
   } else {
     error = "No list found.";
   }
-  res
-    .status(200)
-    .json({ Games: games, Title: title, Owner: owner, Error: error });
+  res.status(200).json({ Games: games, ListInfo: listInfo, Error: error });
 });
 
 app.post("/api/addGameToList", async (req, res, next) => {

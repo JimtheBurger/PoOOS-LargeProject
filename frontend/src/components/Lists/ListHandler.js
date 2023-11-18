@@ -11,8 +11,11 @@ import { BsInfoCircleFill } from "react-icons/bs";
 function ListHandler() {
   const [games, setGames] = useState([{}]);
   const [finalGames, setFinalGames] = useState([{}]);
-  const [title, setTitle] = useState("");
-  const [owner, setOwner] = useState("");
+  const [listInfo, setListInfo] = useState({
+    Name: "",
+    Owner: "Non",
+    Private: true,
+  });
 
   //  get context
   const { user } = useContext(AppContext);
@@ -32,8 +35,7 @@ function ListHandler() {
         const reply = await connectAPI({ listId: listId }, "getGamesFromList");
         if (reply.Error === "") {
           setGames(reply.Games);
-          setTitle(reply.Title);
-          setOwner(reply.Owner);
+          setListInfo(reply.ListInfo);
         } else {
           console.log(reply.Error);
         }
@@ -65,12 +67,7 @@ function ListHandler() {
           {isLoading ? (
             <Spinner animation="border" size="lg" variant="accent" />
           ) : (
-            <ListDisplay
-              games={finalGames}
-              title={title}
-              owner={owner}
-              listId={listId}
-            />
+            <ListDisplay games={finalGames} listInfo={listInfo} />
           )}
         </>
       )}

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 import ListDisplay from "../Lists/ListDisplay";
 import { connectAPI } from "../Forms/connectAPI";
 import ListSearch from "../Lists/ListSearch";
@@ -31,9 +30,11 @@ function BrowseHandler() {
       <ListSearch setSearch={setSearch} setGenre={setGenre} />
       <ListDisplay
         games={games}
-        title={genre === "" ? "All Genres" : genre}
-        owner={"Non"}
-        listId={0}
+        listInfo={{
+          Name: genre === "" ? "All Genres" : genre,
+          Owner: "Non",
+          ListId: 0,
+        }}
       />
     </>
   );

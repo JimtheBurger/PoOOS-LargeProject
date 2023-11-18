@@ -1,13 +1,25 @@
 import { Col, Row, Container } from "react-bootstrap";
 import GameCard from "../Cards/GameCard";
+import EditButton from "../Forms/ListForms/EditButton";
+import { useContext } from "react";
+import AppContext from "../../context/AppContext";
 
-//Shows a list of games, takes a list of game objects
-function ListDisplay({ games, title, owner, listId }) {
+//Shows a list of games, takes a list of game objects and list object
+function ListDisplay({ games, listInfo }) {
+  const { user } = useContext(AppContext);
+
+  console.log(user);
+
   return (
     <Container>
       <Row className="text-center my-5">
         <Col>
-          <h2>{title}</h2>
+          <h2>
+            {listInfo.Name}{" "}
+            {user.User.Username === listInfo.Owner && (
+              <EditButton listInfo={listInfo} />
+            )}
+          </h2>
         </Col>
       </Row>
       <Row className="g-4 align-items-stretch">
@@ -17,9 +29,9 @@ function ListDisplay({ games, title, owner, listId }) {
               <GameCard
                 key={index}
                 game={game}
-                title={title}
-                owner={owner}
-                listId={listId}
+                title={listInfo.Name}
+                owner={listInfo.Owner}
+                listId={listInfo.ListId}
               />
             </Col>
           ))}

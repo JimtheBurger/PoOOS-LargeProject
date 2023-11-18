@@ -17,7 +17,7 @@ import BrowseDBPage from "./pages/BrowseDBPage";
 
 function App() {
   const [user, setUser] = useState({
-    User: "",
+    User: { Username: "", Email: "", Lists: [] },
     ListInfo: "",
     IsLoggedIn: false,
   });
