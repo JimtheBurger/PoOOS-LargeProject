@@ -17,7 +17,7 @@ import BrowseDBPage from "./pages/BrowseDBPage";
 
 function App() {
   const [user, setUser] = useState({
-    Username: "",
+    User: "",
     ListInfo: "",
     IsLoggedIn: false,
   });
@@ -50,6 +50,7 @@ function App() {
           <Route path="/adminAddGames" element={<AdminAddGames />} />
           <Route path="/game/:AppID" element={<GamePage />} />
           <Route path="/list" element={<ListPage />} />
+          <Route path="/list/:listId" element={<ListPage />} />
         </Routes>
       </BrowserRouter>
     </AppContext.Provider>

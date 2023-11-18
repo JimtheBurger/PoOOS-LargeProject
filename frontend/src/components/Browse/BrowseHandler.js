@@ -17,7 +17,6 @@ function BrowseHandler() {
         { Name: search, Genre: genre },
         "searchGames"
       );
-      console.log(reply);
       if (reply.Error === "") {
         setGames(reply.Games);
       } else {
@@ -30,7 +29,12 @@ function BrowseHandler() {
   return (
     <>
       <ListSearch setSearch={setSearch} setGenre={setGenre} />
-      <ListDisplay games={games} title={genre === "" ? "All Genres" : genre} />
+      <ListDisplay
+        games={games}
+        title={genre === "" ? "All Genres" : genre}
+        owner={"Non"}
+        listId={0}
+      />
     </>
   );
 }

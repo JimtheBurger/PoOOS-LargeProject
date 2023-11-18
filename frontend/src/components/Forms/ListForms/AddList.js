@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { connectAPI } from "../connectAPI";
 
 function AddList({ keyVal, handleSetKey }) {

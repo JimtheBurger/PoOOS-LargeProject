@@ -58,7 +58,7 @@ function HookLogin() {
     } else {
       //Log in user
       setUser({
-        Username: reply.User.Username,
+        User: reply.User,
         ListInfo: reply.ListInfo,
         IsLoggedIn: true,
       });

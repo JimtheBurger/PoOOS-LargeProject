@@ -1,22 +1,32 @@
-import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { useParams, Link } from "react-router-dom";
 import ListDisplay from "./ListDisplay";
 import { connectAPI } from "../Forms/connectAPI";
 import ListSearch from "./ListSearch";
+import ListMenu from "./ListMenu";
+import AppContext from "../../context/AppContext";
+import { Container, Alert, Spinner } from "react-bootstrap";
+import { BsInfoCircleFill } from "react-icons/bs";
 
 function ListHandler() {
   const [games, setGames] = useState([{}]);
   const [finalGames, setFinalGames] = useState([{}]);
   const [title, setTitle] = useState("");
   const [owner, setOwner] = useState("");
-  const [searchParams, setSearchParams] = useSearchParams();
-  const listId = searchParams.get("listId");
+
+  //  get context
+  const { user } = useContext(AppContext);
+  const { listId } = useParams();
+
+  // loading state
+  const [isLoading, setIsLoading] = useState(true);
 
   //search states
   const [search, setSearch] = useState("");
   const [genre, setGenre] = useState("");
 
   useEffect(() => {
+    setIsLoading(true);
     async function getGames() {
       if (listId) {
         const reply = await connectAPI({ listId: listId }, "getGamesFromList");
@@ -32,7 +42,8 @@ function ListHandler() {
       }
     }
     getGames();
-  }, []);
+    setIsLoading(false);
+  }, [listId]);
 
   useEffect(() => {
     if (games[0].Name) {
@@ -48,13 +59,32 @@ function ListHandler() {
 
   return (
     <>
-      <ListSearch setSearch={setSearch} setGenre={setGenre} />
-      <ListDisplay
-        games={finalGames}
-        title={title}
-        owner={owner}
-        listId={listId}
-      />
+      {listId && user.IsLoggedIn && (
+        <>
+          <ListSearch setSearch={setSearch} setGenre={setGenre} />
+          {isLoading ? (
+            <Spinner animation="border" size="lg" variant="accent" />
+          ) : (
+            <ListDisplay
+              games={finalGames}
+              title={title}
+              owner={owner}
+              listId={listId}
+            />
+          )}
+        </>
+      )}
+      {!listId && (
+        <Container className="my-5">
+          {!user.IsLoggedIn && (
+            <Alert variant="info" className="mx-auto">
+              <BsInfoCircleFill /> You must login to view your lists. Please
+              login <Link to="/login">here.</Link>
+            </Alert>
+          )}
+          {user.IsLoggedIn && <ListMenu listInfo={user.ListInfo} />}
+        </Container>
+      )}
     </>
   );
 }

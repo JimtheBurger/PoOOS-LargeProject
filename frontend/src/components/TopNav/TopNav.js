@@ -50,7 +50,15 @@ const TopNav = () => {
               </Nav.Link>
             )}
             {user.IsLoggedIn && (
-              <Button variant="outline-accent" onClick={() => handleLogout()}>
+              <Nav.Link as={Link} to="/list">
+                Lists
+              </Nav.Link>
+            )}
+            {user.IsLoggedIn && (
+              <Button
+                variant="outline-accent"
+                className="ms-2"
+                onClick={() => handleLogout()}>
                 Logout
               </Button>
             )}

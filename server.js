@@ -147,7 +147,7 @@ app.post("/api/login", async (req, res, next) => {
       .collection("Users")
       .findOne(
         { Username: username, Password: password },
-        { Username: 1, Lists: 1, _id: 0 }
+        { Password: 0, Lists: 0, _id: 0 }
       );
 
     if (user) {

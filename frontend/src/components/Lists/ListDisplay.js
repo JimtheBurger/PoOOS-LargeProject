@@ -5,7 +5,7 @@ import GameCard from "../Cards/GameCard";
 function ListDisplay({ games, title, owner, listId }) {
   return (
     <Container>
-      <Row style={{ marginTop: "50px" }} className="text-center">
+      <Row className="text-center my-5">
         <Col>
           <h2>{title}</h2>
         </Col>
