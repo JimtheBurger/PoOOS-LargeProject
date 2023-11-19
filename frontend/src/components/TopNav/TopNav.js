@@ -22,7 +22,6 @@ const TopNav = () => {
     navigate("/");
   };
 
-  console.log("TopNav sees ", user, user.IsLoggedIn);
   return (
     <Navbar expand="md" className="bg-purple" variant="dark">
       <Container>

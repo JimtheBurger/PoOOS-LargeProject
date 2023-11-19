@@ -1,14 +1,13 @@
-import { Col, Row, Container } from "react-bootstrap";
+import { Col, Row, Container, Alert } from "react-bootstrap";
 import GameCard from "../Cards/GameCard";
 import EditButton from "../Forms/ListForms/EditButton";
 import { useContext } from "react";
 import AppContext from "../../context/AppContext";
+import { BsInfoCircleFill } from "react-icons/bs";
 
 //Shows a list of games, takes a list of game objects and list object
 function ListDisplay({ games, listInfo }) {
   const { user } = useContext(AppContext);
-
-  console.log(user);
 
   return (
     <Container>
@@ -23,9 +22,9 @@ function ListDisplay({ games, listInfo }) {
         </Col>
       </Row>
       <Row className="g-4 align-items-stretch">
-        {games[0] &&
+        {JSON.stringify(games[0]) !== "{}" ? (
           games.map((game, index) => (
-            <Col lg={4} md={6} xs={6}>
+            <Col key={index} lg={4} md={6} xs={6}>
               <GameCard
                 key={index}
                 game={game}
@@ -34,7 +33,12 @@ function ListDisplay({ games, listInfo }) {
                 listId={listInfo.ListId}
               />
             </Col>
-          ))}
+          ))
+        ) : (
+          <Alert variant="info" className="mx-auto">
+            <BsInfoCircleFill /> Nothing to Show...
+          </Alert>
+        )}
       </Row>
     </Container>
   );

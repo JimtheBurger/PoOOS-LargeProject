@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { connectAPI } from "./components/Forms/connectAPI";
 
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -14,6 +15,7 @@ import AppContext from "./context/AppContext";
 import GamePage from "./pages/GamePage";
 import ListPage from "./pages/ListPage";
 import BrowseDBPage from "./pages/BrowseDBPage";
+import ListMenuPage from "./pages/ListMenuPage";
 
 function App() {
   const [user, setUser] = useState({
@@ -24,17 +26,18 @@ function App() {
   });
 
   useEffect(() => {
-    console.log("getting user...");
     const checkState = JSON.parse(window.localStorage.getItem("state"));
     if (checkState) {
       const now = new Date();
       if (now.getTime() < checkState.expiry) {
         setUser(checkState);
       } else {
-        console.log("Expired Login: ", now.getTime(), checkState.expiry);
+        //console.log("Expired Login: ", now.getTime(), checkState.expiry);
+        connectAPI({ empty: "empty" }, "logout");
         window.localStorage.setItem("state", JSON.stringify(user));
       }
     } else {
+      connectAPI({ empty: "empty" }, "logout");
       window.localStorage.setItem("state", JSON.stringify(user));
     }
   }, []);
@@ -58,7 +61,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/adminAddGames" element={<AdminAddGames />} />
           <Route path="/game/:AppID" element={<GamePage />} />
-          <Route path="/list" element={<ListPage />} />
+          <Route path="/list" element={<ListMenuPage />} />
           <Route path="/list/:listId" element={<ListPage />} />
         </Routes>
       </BrowserRouter>
