@@ -56,79 +56,65 @@ function Game() {
   }
 
   return (
-    <div
-      className="game-content"
-      style={{
-        backgroundColor: "#d0cdd6",
-        minHeight: "100vh",
-        padding: "20px",
-        position: "relative",
-      }}
-    >
-      <Container>
-        <Card style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, .2)" }}>
-          <Card.Body>
-            <Row>
-              <Col lg={4}>
-                <Card.Img src={SelectedGame.Image} />
-              </Col>
-              <Col>
-                <div
-                  style={{ marginTop: "10px" }}
-                  className="text-align-center"
-                >
-                  <h3>{SelectedGame.Name}</h3>
-                  <p>{SelectedGame.Description}</p>
-                </div>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                {user.IsLoggedIn && <AddButtonGP appid={SelectedGame.AppID} />}
-              </Col>
-            </Row>
+    <Container>
+      <Card style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, .2)" }}>
+        <Card.Body>
+          <Row>
+            <Col lg={4}>
+              <Card.Img src={SelectedGame.Image} />
+            </Col>
+            <Col>
+              <div style={{ marginTop: "10px" }} className="text-align-center">
+                <h3>{SelectedGame.Name}</h3>
+                <p>{SelectedGame.Description}</p>
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              {user.IsLoggedIn && <AddButtonGP appid={SelectedGame.AppID} />}
+            </Col>
+          </Row>
 
-            {/* <Button style={{ marginTop: "10px" }} variant="purple">
+          {/* <Button style={{ marginTop: "10px" }} variant="purple">
               <BsStarFill size={20} style={{ color: "#FFD700" }} />{" "}
                Star-shaped button 
             </Button>*/}
-          </Card.Body>
-        </Card>
+        </Card.Body>
+      </Card>
 
-        <Card
-          style={{
-            marginTop: "10px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, .2)",
-          }}
-        >
-          <Card.Body>
-            <p className="mb-2">
-              <strong>Title:</strong> {SelectedGame.Name}{" "}
-            </p>
-            <p className="mb-2">
-              <strong>Genres:</strong>{" "}
-              {SelectedGame.Genres && SelectedGame.Genres.join(", ")}{" "}
-            </p>
-            <p className="mb-2">
-              <strong>Developers:</strong>{" "}
-              {SelectedGame.Developers && SelectedGame.Developers.join(", ")}{" "}
-            </p>
-            <p className="mb-2">
-              <strong>Publishers:</strong>{" "}
-              {SelectedGame.Publishers && SelectedGame.Publishers.join(", ")}{" "}
-            </p>
-            <p className="mb-2">
-              <strong>Publishers:</strong>{" "}
-              {SelectedGame.Price ? SelectedGame.Price.final_formatted : "N/A"}{" "}
-            </p>
-            <p className="mb-0">
-              <strong>Release Date:</strong>{" "}
-              {SelectedGame.Release ? SelectedGame.Release.date : "N/A"}{" "}
-            </p>
-          </Card.Body>
-        </Card>
-      </Container>
-    </div>
+      <Card
+        style={{
+          marginTop: "10px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, .2)",
+        }}>
+        <Card.Body>
+          <p className="mb-2">
+            <strong>Title:</strong> {SelectedGame.Name}{" "}
+          </p>
+          <p className="mb-2">
+            <strong>Genres:</strong>{" "}
+            {SelectedGame.Genres && SelectedGame.Genres.join(", ")}{" "}
+          </p>
+          <p className="mb-2">
+            <strong>Developers:</strong>{" "}
+            {SelectedGame.Developers && SelectedGame.Developers.join(", ")}{" "}
+          </p>
+          <p className="mb-2">
+            <strong>Publishers:</strong>{" "}
+            {SelectedGame.Publishers && SelectedGame.Publishers.join(", ")}{" "}
+          </p>
+          <p className="mb-2">
+            <strong>Publishers:</strong>{" "}
+            {SelectedGame.Price ? SelectedGame.Price.final_formatted : "N/A"}{" "}
+          </p>
+          <p className="mb-0">
+            <strong>Release Date:</strong>{" "}
+            {SelectedGame.Release ? SelectedGame.Release.date : "N/A"}{" "}
+          </p>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }
 export default Game;
