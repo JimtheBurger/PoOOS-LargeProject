@@ -31,9 +31,6 @@ const TopNav = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse>
           <Nav className="ms-auto">
-            <Nav.Link as={Link} to="/about">
-              About
-            </Nav.Link>
             <Nav.Link as={Link} to="/browse">
               Browse
             </Nav.Link>
@@ -43,9 +40,12 @@ const TopNav = () => {
               </Nav.Link>
             )}
             {!user.IsLoggedIn && (
-              <Nav.Link as={Link} to="/register">
+              <Button
+                variant="outline-accent"
+                className="ms-2"
+                onClick={() => navigate("/register")}>
                 Register
-              </Nav.Link>
+              </Button>
             )}
             {user.IsLoggedIn && (
               <Nav.Link as={Link} to="/profile">

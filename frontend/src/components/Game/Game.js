@@ -105,7 +105,7 @@ function Game() {
             {SelectedGame.Publishers && SelectedGame.Publishers.join(", ")}{" "}
           </p>
           <p className="mb-2">
-            <strong>Publishers:</strong>{" "}
+            <strong>Price:</strong>{" "}
             {SelectedGame.Price ? SelectedGame.Price.final_formatted : "N/A"}{" "}
           </p>
           <p className="mb-0">
