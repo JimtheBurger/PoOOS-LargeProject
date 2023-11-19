@@ -43,17 +43,19 @@ function GameCard(props) {
         {game.Name}
       </Card.Body>
 
-      <Card.Footer className="d-flex justify-content-between">
-        {user.IsLoggedIn && <AddButton appid={game.AppID} />}
-        {user.IsLoggedIn && user.User.Username === props.owner && (
-          <RemoveButton
-            appid={game.AppID}
-            name={game.Name}
-            list={props.title}
-            listId={parseInt(props.listId)}
-          />
-        )}
-      </Card.Footer>
+      {user.IsLoggedIn && (
+        <Card.Footer className="d-flex justify-content-between">
+          <AddButton appid={game.AppID} />
+          {user.IsLoggedIn && user.User.Username === props.owner && (
+            <RemoveButton
+              appid={game.AppID}
+              name={game.Name}
+              list={props.title}
+              listId={parseInt(props.listId)}
+            />
+          )}
+        </Card.Footer>
+      )}
     </Card>
   );
 }

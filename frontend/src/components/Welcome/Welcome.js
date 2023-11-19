@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -6,9 +6,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import CardLine from "../Cards/CardLine";
 import GameCard from "../Cards/GameCard";
+import AppContext from "../../context/AppContext";
 
 function Welcome() {
   const [games, setGames] = useState([]);
+  const { user } = useContext(AppContext);
 
   //Gets game data from database
   useEffect(() => {
@@ -62,27 +64,35 @@ function Welcome() {
     <Container>
       <Row style={{ marginTop: "60px" }} className="justify-content-center">
         <Col md={6}>
-          <Card className="text-center">
+          <Card
+            className="text-center"
+            style={{ backgroundColor: "rgba(86, 208, 174, 1)" }}
+          >
             <Card.Body>
-              <Card.Title className="tagline welcome-title">
+              <Card.Title
+                className="tagline welcome-title"
+                style={{ fontSize: "24px" }}
+              >
                 All Your Favorite Games, In One Convenient Place
               </Card.Title>
-              <Card.Text className="detail-text">
-                Create and share game lists with friends, leave reviews on
-                titles you own, and keep track of what you’ve played - and what
-                you haven’t - all on MySteamList!
+              <Card.Text
+                className="detail-text"
+                style={{ fontSize: "17px", fontWeight: "500" }}
+              >
+                Create and share personalized game lists among friends,
+                effortlessly monitor your played and unexplored games with
+                MySteamList!
               </Card.Text>
               <div className="button-container">
-                <Button
-                  style={{ marginRight: "10px" }}
-                  href="register"
-                  variant="primary"
-                  className="mr-2">
-                  JOIN NOW
-                </Button>
-                <Button href="login" variant="success">
-                  LOGIN
-                </Button>
+                {!user.IsLoggedIn && (
+                  <Button
+                    href="register"
+                    variant="outline-dark"
+                    className="mr-2"
+                  >
+                    <strong>Join Now</strong>
+                  </Button>
+                )}
               </div>
             </Card.Body>
           </Card>
