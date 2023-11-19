@@ -40,11 +40,18 @@ function Profile() {
     <Container>
       <Card
         className="shadow mx-auto my-5"
-        style={{ minWidth: "300px", width: "50%" }}>
-        <CardHeader>{user.User.Username}'s Profile</CardHeader>
+        style={{ minWidth: "300px", width: "50%" }}
+      >
+        <CardHeader>
+          <strong>{user.User.Username}'s</strong> Profile
+        </CardHeader>
         <CardBody>
-          <p>Email: {user.User.Email}</p>
-          <p>Verified: {user.User.Verified ? "Yes" : "No"} </p>
+          <p>
+            <strong>Email: </strong> {user.User.Email}
+          </p>
+          <p>
+            <strong>Verified:</strong> {user.User.Verified ? "Yes" : "No"}{" "}
+          </p>
           {!user.User.Verified && (
             <Button
               onClick={() => resendVerification()}
@@ -52,7 +59,8 @@ function Profile() {
               style={{ width: "50%" }}
               className="mx-auto text-light rounded-pill"
               variant="accent"
-              disabled={isLoading || alreadySent}>
+              disabled={isLoading || alreadySent}
+            >
               {isLoading && (
                 <Spinner animation="border" size="lg" variant="purple" />
               )}
