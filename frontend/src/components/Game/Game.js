@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useParams } from "react-router-dom";
-import { BsStarFill } from "react-icons/bs";
+import AddButtonGP from "../Forms/ListForms/AddButtonGP";
+import AppContext from "../../context/AppContext";
 
 function Game() {
   const { AppID } = useParams();
   const [games, setGames] = useState([]);
   const [SelectedGame, setSelectedGame] = useState({});
   const [loading, setLoading] = useState(true);
+  const { user } = useContext(AppContext);
 
   //Gets game data from database
   useEffect(() => {
@@ -65,33 +66,41 @@ function Game() {
       }}
     >
       <Container>
-        <Card style={{ boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}>
+        <Card style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, .2)" }}>
           <Card.Body>
             <Row>
-              <Col xs={12} md={4}>
+              <Col lg={4}>
                 <Card.Img src={SelectedGame.Image} />
               </Col>
-              <Col xs={12} md={6} className="d-flex align-items-center">
-                <div style={{ marginTop: "10px" }}>
+              <Col>
+                <div
+                  style={{ marginTop: "10px" }}
+                  className="text-align-center"
+                >
                   <h3>{SelectedGame.Name}</h3>
                   <p>{SelectedGame.Description}</p>
                 </div>
               </Col>
             </Row>
-            <Button
-              style={{ marginTop: "10px", marginRight: "5px" }}
-              variant="purple"
-            >
-              Add to List <i className="bi bi-caret-down-fill"></i>
-            </Button>
-            <Button style={{ marginTop: "10px" }} variant="purple">
+            <Row>
+              <Col>
+                {user.IsLoggedIn && <AddButtonGP appid={SelectedGame.AppID} />}
+              </Col>
+            </Row>
+
+            {/* <Button style={{ marginTop: "10px" }} variant="purple">
               <BsStarFill size={20} style={{ color: "#FFD700" }} />{" "}
-              {/* Star-shaped button */}
-            </Button>
+               Star-shaped button 
+            </Button>*/}
           </Card.Body>
         </Card>
 
-        <Card style={{ marginTop: "10px" }}>
+        <Card
+          style={{
+            marginTop: "10px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, .2)",
+          }}
+        >
           <Card.Body>
             <p className="mb-2">
               <strong>Title:</strong> {SelectedGame.Name}{" "}

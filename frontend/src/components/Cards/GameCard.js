@@ -33,7 +33,7 @@ function GameCard(props) {
 
   return (
     <Card className="shadow pointer-cursor h-100">
-      <div className="image">
+      <div onClick={() => handleGameClick(game.AppID)} className="image">
         <Card.Img variant="top" src={game.Image} />
         <div className="p-3 image__overlay image__overlay--blur d-none d-md-block">
           {game.Description}
@@ -43,17 +43,19 @@ function GameCard(props) {
         {game.Name}
       </Card.Body>
 
-      <Card.Footer className="d-flex justify-content-between">
-        {user.IsLoggedIn && <AddButton appid={game.AppID} />}
-        {user.IsLoggedIn && user.User.Username === props.owner && (
-          <RemoveButton
-            appid={game.AppID}
-            name={game.Name}
-            list={props.title}
-            listId={parseInt(props.listId)}
-          />
-        )}
-      </Card.Footer>
+      {user.IsLoggedIn && (
+        <Card.Footer className="d-flex justify-content-between">
+          <AddButton appid={game.AppID} />
+          {user.IsLoggedIn && user.User.Username === props.owner && (
+            <RemoveButton
+              appid={game.AppID}
+              name={game.Name}
+              list={props.title}
+              listId={parseInt(props.listId)}
+            />
+          )}
+        </Card.Footer>
+      )}
     </Card>
   );
 }
