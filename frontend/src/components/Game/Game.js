@@ -57,7 +57,7 @@ function Game() {
 
   return (
     <Container>
-      <Card style={{ boxShadow: "0 4px 8px rgba(0, 0, 0, .2)" }}>
+      <Card className="shadow my-3">
         <Card.Body>
           <Row>
             <Col lg={4}>
