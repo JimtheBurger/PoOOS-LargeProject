@@ -33,7 +33,7 @@ function GameCard(props) {
 
   return (
     <Card className="shadow pointer-cursor h-100">
-      <div className="image">
+      <div onClick={() => handleGameClick(game.AppID)} className="image">
         <Card.Img variant="top" src={game.Image} />
         <div className="p-3 image__overlay image__overlay--blur d-none d-md-block">
           {game.Description}
