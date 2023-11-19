@@ -66,7 +66,7 @@ function Welcome() {
         <Col md={6}>
           <Card
             className="text-center"
-            style={{ backgroundColor: "rgba(86, 208, 174, 1)" }}
+            style={{ backgroundColor: "rgba(19, 5, 51, .1)" }}
           >
             <Card.Body>
               <Card.Title
@@ -87,8 +87,9 @@ function Welcome() {
                 {!user.IsLoggedIn && (
                   <Button
                     href="register"
-                    variant="outline-dark"
+                    variant="light"
                     className="mr-2"
+                    style={{ border: "1px solid black" }}
                   >
                     <strong>Join Now</strong>
                   </Button>
