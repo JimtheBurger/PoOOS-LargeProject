@@ -14,3 +14,5 @@ To have this working on your computer you will need
 # Testing
 To test the express server, run the following command:
 `npx jest testing/server.test.js --forceExit`
+
+Make sure you've already run `npm install` and have your .env set up
