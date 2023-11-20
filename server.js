@@ -48,6 +48,7 @@ app.use((req, res, next) => {
 //Sendgrid Setup / Use
 const sgMail = require("@sendgrid/mail");
 const { jwtAuth } = require("./frontend/src/middleware/jwtAuth");
+const e = require("express");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 //msg layout & container function (basic)
@@ -164,9 +165,6 @@ app.post("/api/login", async (req, res, next) => {
 
   var error = "";
   var user = "";
-  var lists = "";
-
-  console.log(req.body);
 
   const { username, password } = req.body;
 
@@ -193,7 +191,7 @@ app.post("/api/login", async (req, res, next) => {
     error = e.toString();
   }
 
-  var ret = { User: user, ListInfo: lists, Error: error };
+  var ret = { User: user, Error: error };
   res.status(200).json(ret);
 });
 
@@ -792,6 +790,93 @@ app.post("/api/deleteList", jwtAuth, async (req, res) => {
     error = e.toString();
   }
   res.status(200).json({ Error: error });
+});
+
+app.post("/api/checkLogin", async (req, res) => {
+  //incoming QRToken
+  //outgoing User({obj}) Error
+  // Also sets cookie named token <- jwt (http only cookie),
+
+  const { QRToken } = req.body;
+  var error = "";
+  var user = "";
+
+  if (!QRToken) {
+    error = "No QRToken specified";
+  } else {
+    try {
+      const db = client.db("COP4331Cards");
+      const token = db.collection("QRToken").findOne({ QRToken: QRToken });
+      if (token) {
+        if (token.UserId !== "") {
+          user = await db.collection("Users").findOne({ UserId: token.UserId });
+        } else {
+          error = "Token not associated with a user";
+        }
+      } else {
+        error = "Token not found or expired";
+      }
+
+      if (user !== "") {
+        const token = jwt.sign(
+          { Username: user.Username },
+          process.env.JSON_SECRET,
+          { expiresIn: "1h" }
+        );
+        res.cookie("token", token, { httpOnly: true });
+      } else {
+        error = "UserId invalid";
+      }
+    } catch (e) {
+      error = e.toString();
+    }
+  }
+  var ret = { User: user, Error: error };
+  res.status(200).json(ret);
+});
+
+app.post("/api/mobileQRLogin", async (req, res) => {
+  //incoming UserId, QRToken
+  //outgoing Error
+
+  var error = "";
+  const { UserId, QRToken } = req.body;
+
+  try {
+    const db = client.db("COP4331Cards");
+
+    const token = await db.collection("QRToken").findOne({ QRToken: QRToken });
+
+    if (!token) {
+      error = "QR Token (" + QRToken + ") Expired or Not Found";
+    } else {
+      const filter = { QRToken: QRToken };
+      const newVals = { $set: { UserId: UserId } };
+      const options = { upsert: false };
+      await db.collection("QRToken").updateOne(filter, newVals, options);
+    }
+  } catch (e) {
+    error = e.toString();
+  }
+  res.status(200).json({ QRToken: token });
+});
+
+app.post("/api/newQRToken", async (req, res) => {
+  //incoming : nothing
+  //outgoing : QRToken
+
+  var token = crypto.randomBytes(64).toString("hex");
+  try {
+    const db = client.db("COP4331Cards");
+    await db.collection("QRToken").insertOne({ QRToken: token, UserId: "" });
+    this.setTimeout(
+      () => db.collection("QRToken").deleteOne({ QRToken: token }),
+      60 * 5 * 1000
+    );
+  } catch (e) {
+    error = e.toString();
+  }
+  res.status(200).json({ QRToken: token });
 });
 
 //search ALL games based on name AND genre

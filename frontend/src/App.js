@@ -11,7 +11,9 @@ import WelcomePage from "./pages/WelcomePage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminAddGames from "./pages/AdminAddGames";
 import BrowsePage from "./pages/BrowsePage";
+
 import AppContext from "./context/AppContext";
+
 import GamePage from "./pages/GamePage";
 import ListPage from "./pages/ListPage";
 import BrowseDBPage from "./pages/BrowseDBPage";
