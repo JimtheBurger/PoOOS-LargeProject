@@ -7,6 +7,7 @@ import {
   Container,
   Row,
   Col,
+  Alert,
 } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -14,14 +15,20 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import { connectAPI } from "./connectAPI.js";
+import YupPassword from "yup-password";
 
 function ResetPassword() {
+  YupPassword(Yup);
   //yup validation schema
   const validationSchema = Yup.object().shape({
     password: Yup.string()
       .required("Password is required")
       .min(8, "Password must be at least 8 characters long")
-      .max(50, "Password cannot be more than 50 characters long"),
+      .max(50, "Password cannot be more than 50 characters long")
+      .minLowercase(1, "Password must contain at least 1 lowercase letter")
+      .minUppercase(1, "Password must contain at least 1 uppercase letter")
+      .minNumbers(1, "Password must contain at least number")
+      .minSymbols(1, "Password must contain at least 1 symbol"),
     passwordValidation: Yup.string().oneOf(
       [Yup.ref("password"), null],
       "Passwords do not match"
@@ -44,7 +51,7 @@ function ResetPassword() {
   });
 
   //UseSearchParams to grab token from URL
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
 
   //this is called when the form is submitted
@@ -53,12 +60,22 @@ function ResetPassword() {
     data.token = token;
     console.log(data);
     var reply = await connectAPI(data, "resetPassword");
-    console.log(reply);
+    if (reply.Error !== "") {
+      setError(reply.Error);
+    } else {
+      setSuccess(
+        "Your Password has been changed! Please return to login to continue."
+      );
+    }
   };
 
   //this lets us toggle showing the passwords or not
   const [showPass, setShowPass] = useState(false);
   const [showPassVal, setShowPassVal] = useState(false);
+
+  //error and success messages
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   //returned object
   return (
@@ -162,6 +179,22 @@ function ResetPassword() {
                   </Button>
                 </Row>
               </Form>
+              {error !== "" && (
+                <Alert
+                  variant="danger"
+                  dismissible
+                  onClose={() => setError("")}>
+                  {error}
+                </Alert>
+              )}
+              {success !== "" && (
+                <Alert
+                  variant="success"
+                  dismissible
+                  onClose={() => setSuccess("")}>
+                  {success}
+                </Alert>
+              )}
             </Card.Body>
             <Card.Footer>
               Make sure to use a memorable and secure password!

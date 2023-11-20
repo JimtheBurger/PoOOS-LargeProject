@@ -266,8 +266,11 @@ function HookLogin() {
                 </Tab>
               </Tabs>
             </Card.Body>
-            <Card.Footer>
-              Don't Have an Account? <Link to="/register">Register Here</Link>
+            <Card.Footer className="d-flex justify-content-between">
+              <div>
+                Don't Have an Account? <Link to="/register">Register Here</Link>
+              </div>
+              <Link to="/forgotPassword">Forgot Password?</Link>
             </Card.Footer>
           </Card>
         </Col>

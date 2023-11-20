@@ -214,7 +214,7 @@ app.post("/api/logout", async (req, res) => {
 app.post("/api/forgotPassword", async (req, res, next) => {
   // Takes username and sends associated email a reset token (stores reset token on mongodb)
   // incoming: username
-  // outgoing: error
+  // outgoing: Error
   var error = "";
   var token = crypto.randomBytes(64).toString("hex");
   const { username } = req.body;
@@ -224,7 +224,7 @@ app.post("/api/forgotPassword", async (req, res, next) => {
     const user = await db.collection("Users").findOne({ Username: username });
 
     if (!user) {
-      error = "No User Found";
+      error = "Username not associated with an account";
     } else {
       const filter = { _id: user._id };
       const newVals = { $set: { PasswordToken: token } };
@@ -243,11 +243,11 @@ app.post("/api/forgotPassword", async (req, res, next) => {
   } catch (e) {
     error = e.toString();
   }
-  var ret = { error: error };
+  var ret = { Error: error };
   res.status(200).json(ret);
 });
 
-app.post("/api/resetPassword", async (req, res, next) => {
+app.post("/api/resetPassword", async (req, res) => {
   // Takes password and token and resets password accordingly
   // incoming: token, password
   // outgoing: error
@@ -258,7 +258,6 @@ app.post("/api/resetPassword", async (req, res, next) => {
   try {
     const db = client.db("COP4331Cards");
     const user = await db.collection("Users").findOne({ PasswordToken: token });
-
     if (!user) {
       error = "Invalid token";
     } else {
