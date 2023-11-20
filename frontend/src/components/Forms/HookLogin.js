@@ -20,7 +20,6 @@ import { connectAPI } from "./connectAPI.js";
 import { Link, useNavigate } from "react-router-dom";
 import AppContext from "../../context/AppContext.js";
 import QRCode from "react-qr-code";
-import ForgotPassword from "./ForgotPassword.jsx";
 
 function HookLogin() {
   //yup validation schema
@@ -85,8 +84,12 @@ function HookLogin() {
   const [showQR, setShowQR] = useState("");
   const [QRToken, setQRToken] = useState("");
   const [attempt, setAttempt] = useState();
-  const toggleShowQR = () => {
-    setShowQR(!showQR);
+  const handleSelect = (key) => {
+    if (key == 1) {
+      setShowQR(false);
+    } else {
+      setShowQR(true);
+    }
   };
 
   const cycleCheckToken = async () => {
@@ -142,13 +145,16 @@ function HookLogin() {
             className="shadow mx-auto my-5"
             style={{ minWidth: "300px", width: "50%" }}>
             {/* Bootstrap card with header and body*/}
-            <Card.Header>Login Options</Card.Header>
+            <Card.Header>
+              {!showQR ? "Login Options" : "Showing QR"}
+            </Card.Header>
             <Card.Body>
-              <Tabs defaultActiveKey="Login" id="AddTabs" className="mb-3">
-                <Tab
-                  eventKey="Login"
-                  title="Login"
-                  onSelect={() => setShowQR(false)}>
+              <Tabs
+                defaultActiveKey={1}
+                id="AddTabs"
+                className="mb-3"
+                onSelect={(key) => handleSelect(key)}>
+                <Tab eventKey={1} title="Login">
                   {/*
               Start Form Declaration, noValidate b/c we validate with react-hook-form (RHF) instead.
               Pass formSubmit through RHF handleSubmit hook, which is called when the form is submitted (onSubmit)
@@ -248,7 +254,7 @@ function HookLogin() {
                   )}
                 </Tab>
                 <Tab
-                  eventKey="QRLogin"
+                  eventKey={2}
                   title="QR Login"
                   onSelect={() => setShowQR(true)}>
                   <Container className="text-center my-5">
