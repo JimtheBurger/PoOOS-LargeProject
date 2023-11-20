@@ -49,17 +49,13 @@ function HookLogin() {
   //this is called when the form is submitted
   const formSubmit = async (data) => {
     setIsLoading(true); // Show spinner and disable button
-    console.log(data);
     var reply = await connectAPI(data, "login");
-    console.log(reply);
 
     if (reply.Error !== "") {
       setLoginError(reply.Error);
     } else {
       //Log in user
-
       const now = new Date();
-
       setUser({
         User: reply.User,
         ListInfo: reply.ListInfo,

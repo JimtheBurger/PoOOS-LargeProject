@@ -5,6 +5,7 @@ const cors = require("cors");
 const axios = require("axios");
 const path = require("path");
 const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 
@@ -169,17 +170,20 @@ app.post("/api/login", async (req, res, next) => {
 
   try {
     const db = client.db("COP4331Cards");
-    user = await db
-      .collection("Users")
-      .findOne({ Username: username, Password: password });
+    user = await db.collection("Users").findOne({ Username: username });
 
     if (user) {
-      const token = jwt.sign(
-        { Username: user.Username },
-        process.env.JSON_SECRET,
-        { expiresIn: "1h" }
-      );
-      res.cookie("token", token, { httpOnly: true });
+      const validPassword = await bcrypt.compare(password, user.Password);
+      if (validPassword) {
+        const token = jwt.sign(
+          { Username: user.Username },
+          process.env.JSON_SECRET,
+          { expiresIn: "1h" }
+        );
+        res.cookie("token", token, { httpOnly: true });
+      } else {
+        error = "Username/Password Combination incorrect";
+      }
     } else {
       error = "Username/Password Combination incorrect";
     }
@@ -326,9 +330,12 @@ app.post("/api/register", async (req, res, next) => {
   var error = "";
   var token = crypto.randomBytes(64).toString("hex");
   const { username, password, email } = req.body;
+
+  var hash = await bcrypt.hash(password, 8);
+
   const newUser = {
     Username: username,
-    Password: password,
+    Password: hash,
     Email: email,
     Lists: [],
     Verified: false,
@@ -527,7 +534,11 @@ app.post("/api/editList", jwtAuth, async (req, res) => {
     if (list) {
       var filter = { ListId: listId };
       var newVals = {
-        $set: { Name: listName, Private: isPrivate, AllowedUsers: allowedUsers },
+        $set: {
+          Name: listName,
+          Private: isPrivate,
+          AllowedUsers: allowedUsers,
+        },
       };
       var options = { upsert: false };
       db.collection("Lists").updateOne(filter, newVals, options);

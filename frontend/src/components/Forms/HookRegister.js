@@ -13,11 +13,13 @@ import {
 } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import YupPassword from "yup-password";
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import { connectAPI } from "./connectAPI";
 import { Link } from "react-router-dom";
 
 function HookRegister() {
+  YupPassword(Yup);
   //yup validation schema
   const validationSchema = Yup.object().shape({
     username: Yup.string()
@@ -27,7 +29,11 @@ function HookRegister() {
     password: Yup.string()
       .required("Password is required")
       .min(8, "Password must be at least 8 characters long")
-      .max(50, "Password cannot be more than 50 characters long"),
+      .max(50, "Password cannot be more than 50 characters long")
+      .minLowercase(1, "Password must contain at least 1 lowercase letter")
+      .minUppercase(1, "Password must contain at least 1 uppercase letter")
+      .minNumbers(1, "Password must contain at least number")
+      .minSymbols(1, "Password must contain at least 1 symbol"),
     passwordValidation: Yup.string().oneOf(
       [Yup.ref("password"), null],
       "Passwords do not match"
@@ -55,13 +61,12 @@ function HookRegister() {
   //this is called when the form is submitted
   const formSubmit = async (data) => {
     setIsLoading(true); // show spinner and disable button
-    console.log(data);
+
     var reply = await connectAPI(data, "register");
-    console.log(reply);
     if (reply.Error !== "") {
       setRegisterError(reply.Error);
     } else {
-      window.location.href = "/profile";
+      setRegisterSuccess("User successfully registered!");
     }
     setIsLoading(false); // Stop showing spinner and reenable button
   };
@@ -73,6 +78,7 @@ function HookRegister() {
   //this lets us control user feedback (normal, loading, error)
   const [isLoading, setIsLoading] = useState(false);
   const [registerError, setRegisterError] = useState("");
+  const [registerSuccess, setRegisterSuccess] = useState("");
 
   //returned object
   return (
@@ -235,6 +241,14 @@ function HookRegister() {
                   dismissible
                   onClose={() => setRegisterError("")}>
                   {registerError}
+                </Alert>
+              )}
+              {registerSuccess !== "" && (
+                <Alert
+                  variant="success"
+                  dismissible
+                  onClose={() => setRegisterSuccess("")}>
+                  {registerSuccess}
                 </Alert>
               )}
             </Card.Body>
