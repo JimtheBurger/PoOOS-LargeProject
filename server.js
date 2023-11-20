@@ -806,26 +806,30 @@ app.post("/api/checkLogin", async (req, res) => {
   } else {
     try {
       const db = client.db("COP4331Cards");
-      const token = db.collection("QRTokens").findOne({ QRToken: QRToken });
+      const token = await db
+        .collection("QRTokens")
+        .findOne({ QRToken: QRToken });
       if (token) {
+        console.log(token);
         if (token.UserId !== "") {
-          user = await db.collection("Users").findOne({ UserId: token.UserId });
+          user = await db
+            .collection("Users")
+            .findOne({ UserId: parseInt(token.UserId) });
+          if (user !== "") {
+            const token = jwt.sign(
+              { Username: user.Username },
+              process.env.JSON_SECRET,
+              { expiresIn: "1h" }
+            );
+            res.cookie("token", token, { httpOnly: true });
+          } else {
+            error = "UserId invalid";
+          }
         } else {
           error = "Token not associated with a user";
         }
       } else {
         error = "Token not found or expired";
-      }
-
-      if (user !== "") {
-        const token = jwt.sign(
-          { Username: user.Username },
-          process.env.JSON_SECRET,
-          { expiresIn: "1h" }
-        );
-        res.cookie("token", token, { httpOnly: true });
-      } else {
-        error = "UserId invalid";
       }
     } catch (e) {
       error = e.toString();

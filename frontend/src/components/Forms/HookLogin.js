@@ -79,8 +79,9 @@ function HookLogin() {
   const [QRError, setQRError] = useState("");
 
   //mobile logon qr stuff
-  const [QRToken, setQRToken] = useState("");
   const [showQR, setShowQR] = useState("");
+  const [QRToken, setQRToken] = useState("");
+  const [attempt, setAttempt] = useState();
   const toggleShowQR = () => {
     setShowQR(!showQR);
   };
@@ -106,25 +107,30 @@ function HookLogin() {
       navigate("/profile");
       return;
     }
-    await timeout(500);
-    cycleCheckToken();
   };
 
   //setting qr stuff when enabled
   useEffect(() => {
     async function getQRToken() {
       const token = await connectAPI({ Empty: "empty" }, "newQRToken");
-      console.log(token);
       if (token.Error !== "") {
         setQRError(token.Error);
       } else {
         setQRToken(token.QRToken);
+        cycleCheckToken(token.QRToken);
       }
     }
-    if (showQR) {
-      getQRToken();
-      cycleCheckToken();
-    }
+    getQRToken();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (showQR) {
+        cycleCheckToken();
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [showQR]);
 
   //returned object
