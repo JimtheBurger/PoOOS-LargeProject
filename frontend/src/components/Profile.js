@@ -25,7 +25,8 @@ function Profile() {
 
   useEffect(() => {
     async function updateUser() {
-      const reply = await ({ Empty: "empty" }, "updateUser");
+      const reply = await connectAPI({ Empty: "empty" }, "updateUser");
+      console.log(reply);
       if (reply.Error !== "") {
         console.log(reply.Error);
       } else if (reply.User !== "") {

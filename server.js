@@ -216,6 +216,8 @@ app.post("/api/updateUser", jwtAuth, async (req, res) => {
   //returns User obj and Error
   //array valid with react-select
 
+  console.log("this ran");
+
   var username = req.Username;
   var user = "";
   var error = "";
