@@ -211,6 +211,37 @@ app.post("/api/logout", async (req, res) => {
   return res.status(200).json({ Error: error });
 });
 
+app.post("/api/updateUser", jwtAuth, async (req, res) => {
+  //takes in jwt
+  //returns User obj and Error
+  //array valid with react-select
+
+  var username = req.Username;
+  var user = "";
+  var error = "";
+
+  if (!username) {
+    error = "Invalid token";
+  } else {
+    try {
+      const db = client.db("COP4331Cards");
+      const userTry = await db
+        .collection("Users")
+        .findOne({ Username: username });
+
+      if (userTry) {
+        user = userTry;
+      } else {
+        error = "Fail to fetch user";
+      }
+    } catch (e) {
+      error = e.toString();
+    }
+  }
+  var ret = { User: user, Error: error };
+  res.status(200).json(ret);
+});
+
 app.post("/api/forgotPassword", async (req, res, next) => {
   // Takes username and sends associated email a reset token (stores reset token on mongodb)
   // incoming: username

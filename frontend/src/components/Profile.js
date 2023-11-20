@@ -8,7 +8,7 @@ import {
   Alert,
 } from "react-bootstrap";
 import { connectAPI } from "./Forms/connectAPI";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { BsCheckCircle } from "react-icons/bs";
 import AppContext from "../context/AppContext";
 
@@ -21,7 +21,26 @@ function Profile() {
   const [success, setSuccess] = useState("");
 
   // Context
-  const { user } = useContext(AppContext);
+  const { user, setUser } = useContext(AppContext);
+
+  useEffect(() => {
+    async function updateUser() {
+      const reply = await ({ Empty: "empty" }, "updateUser");
+      if (reply.Error !== "") {
+        console.log(reply.Error);
+      } else if (reply.User !== "") {
+        //Log in user
+        const now = new Date();
+        setUser({
+          User: reply.User,
+          ListInfo: reply.ListInfo,
+          IsLoggedIn: true,
+          expiry: now.getTime() + 60 * 60 * 1000,
+        });
+      }
+    }
+    updateUser();
+  }, []);
 
   // handles resending verification email
   const resendVerification = async () => {
