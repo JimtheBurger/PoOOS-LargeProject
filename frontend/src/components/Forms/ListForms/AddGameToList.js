@@ -72,7 +72,7 @@ function AddGameToList({ appid, keyVal, handleSetKey }) {
           Select the lists to add this game to. Disabled options already contain
           this game.
         </p>
-        <Row>
+        <Row className="my-5">
           <Col className="col-auto">
             <Button
               type="submit"
