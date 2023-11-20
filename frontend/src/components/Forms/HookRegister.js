@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
   Form,
@@ -16,7 +16,8 @@ import * as Yup from "yup";
 import YupPassword from "yup-password";
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import { connectAPI } from "./connectAPI";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import AppContext from "../../context/AppContext";
 
 function HookRegister() {
   YupPassword(Yup);
@@ -40,6 +41,10 @@ function HookRegister() {
     ),
     email: Yup.string().required("Email is required").email("Email is invalid"),
   });
+
+  //login helpers
+  const navigate = useNavigate();
+  const { user, setUser } = useContext(AppContext);
 
   //react-hook-form useForm hook for username and password
   const {
@@ -66,7 +71,23 @@ function HookRegister() {
     if (reply.Error !== "") {
       setRegisterError(reply.Error);
     } else {
-      setRegisterSuccess("User successfully registered!");
+      setRegisterSuccess("User successfully registered! Redirecting...");
+      var reply = await connectAPI(data, "login");
+      setTimeout(() => {
+        if (reply.Error !== "") {
+          setRegisterError(reply.Error);
+        } else {
+          //Log in user
+          const now = new Date();
+          setUser({
+            User: reply.User,
+            ListInfo: reply.ListInfo,
+            IsLoggedIn: true,
+            expiry: now.getTime() + 60 * 60 * 1000,
+          });
+          navigate("/profile");
+        }
+      }, 2000);
     }
     setIsLoading(false); // Stop showing spinner and reenable button
   };

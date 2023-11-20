@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { connectAPI } from "./connectAPI";
-import { Alert, Spinner } from "react-bootstrap";
+import { Alert, Container, Spinner } from "react-bootstrap";
 
 function VerifyEmail() {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +31,7 @@ function VerifyEmail() {
   }, []);
 
   return (
-    <div>
+    <Container style={{ minWidth: "300px", width: "50%" }}>
       {isLoading && <Spinner animation="border" size="lg" variant="primary" />}
       {error && (
         <Alert variant="danger">
@@ -39,7 +39,7 @@ function VerifyEmail() {
         </Alert>
       )}
       {valid && <Alert variant="success">Email Successfully Verified!</Alert>}
-    </div>
+    </Container>
   );
 }
 

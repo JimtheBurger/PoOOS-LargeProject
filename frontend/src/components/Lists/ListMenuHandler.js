@@ -15,7 +15,15 @@ export default function ListMenuHandler() {
           <Link to="/login">here.</Link>
         </Alert>
       )}
-      {user.IsLoggedIn && <ListMenu />}
+      {user.IsLoggedIn &&
+        (user.User.Verified ? (
+          <ListMenu />
+        ) : (
+          <Alert variant="info" className="mx-auto">
+            <BsInfoCircleFill /> You must verify your account to create lists.
+            Please check your profile <Link to="/profile">here.</Link>
+          </Alert>
+        ))}
     </Container>
   );
 }

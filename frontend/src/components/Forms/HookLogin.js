@@ -9,6 +9,8 @@ import {
   Col,
   Spinner,
   Alert,
+  Tabs,
+  Tab,
 } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -18,6 +20,7 @@ import { connectAPI } from "./connectAPI.js";
 import { Link, useNavigate } from "react-router-dom";
 import AppContext from "../../context/AppContext.js";
 import QRCode from "react-qr-code";
+import ForgotPassword from "./ForgotPassword.jsx";
 
 function HookLogin() {
   //yup validation schema
@@ -86,10 +89,6 @@ function HookLogin() {
     setShowQR(!showQR);
   };
 
-  function timeout(delay) {
-    return new Promise((res) => setTimeout(res, delay));
-  }
-
   const cycleCheckToken = async () => {
     const reply = await connectAPI({ QRToken: QRToken }, "checkLogin");
     if (reply.Error !== "") {
@@ -143,125 +142,129 @@ function HookLogin() {
             className="shadow mx-auto my-5"
             style={{ minWidth: "300px", width: "50%" }}>
             {/* Bootstrap card with header and body*/}
-            <Card.Header>Login</Card.Header>
+            <Card.Header>Login Options</Card.Header>
             <Card.Body>
-              {/*
+              <Tabs defaultActiveKey="Login" id="AddTabs" className="mb-3">
+                <Tab
+                  eventKey="Login"
+                  title="Login"
+                  onClick={() => setShowQR(false)}>
+                  {/*
               Start Form Declaration, noValidate b/c we validate with react-hook-form (RHF) instead.
               Pass formSubmit through RHF handleSubmit hook, which is called when the form is submitted (onSubmit)
               */}
-              {showQR ? (
-                <Container className="text-center my-5">
-                  <QRCode value={QRToken} />
-                  {QRError !== "" && (
-                    <Alert
-                      variant="danger"
-                      dismissible
-                      onClose={() => setQRError("")}
-                      className="my-3">
-                      {QRError}
-                    </Alert>
-                  )}
-                </Container>
-              ) : (
-                <Form noValidate onSubmit={handleSubmit(formSubmit)}>
-                  <Row>
-                    {/* Username section of the form*/}
-                    <Form.Group controlId="username" className="my-2">
-                      <FloatingLabel label="Username">
-                        <Controller
-                          name="username"
-                          control={control}
-                          render={({ field }) => (
-                            <Form.Control
-                              isInvalid={errors.username}
-                              isValid={
-                                touchedFields.username && !errors.username
-                              }
-                              type="text"
-                              {...field}
-                              placeholder=""
-                            />
-                          )}
-                        />
-                        <Form.Control.Feedback type="invalid">
-                          {errors.username?.message}
-                        </Form.Control.Feedback>
-                      </FloatingLabel>
-                    </Form.Group>
-                  </Row>
-                  <Row>
-                    <Col>
-                      {/* Password section of the form*/}
+                  <Form noValidate onSubmit={handleSubmit(formSubmit)}>
+                    <Row>
+                      {/* Username section of the form*/}
                       <Form.Group controlId="username" className="my-2">
-                        <FloatingLabel label="Password">
+                        <FloatingLabel label="Username">
                           <Controller
-                            name="password"
+                            name="username"
                             control={control}
                             render={({ field }) => (
                               <Form.Control
-                                isInvalid={errors.password}
+                                isInvalid={errors.username}
                                 isValid={
-                                  touchedFields.password && !errors.password
+                                  touchedFields.username && !errors.username
                                 }
-                                type={showPass ? "text" : "password"}
+                                type="text"
                                 {...field}
                                 placeholder=""
                               />
                             )}
                           />
                           <Form.Control.Feedback type="invalid">
-                            {errors.password?.message}
+                            {errors.username?.message}
                           </Form.Control.Feedback>
                         </FloatingLabel>
                       </Form.Group>
-                    </Col>
-                    <Col className="col-auto">
+                    </Row>
+                    <Row>
+                      <Col>
+                        {/* Password section of the form*/}
+                        <Form.Group controlId="username" className="my-2">
+                          <FloatingLabel label="Password">
+                            <Controller
+                              name="password"
+                              control={control}
+                              render={({ field }) => (
+                                <Form.Control
+                                  isInvalid={errors.password}
+                                  isValid={
+                                    touchedFields.password && !errors.password
+                                  }
+                                  type={showPass ? "text" : "password"}
+                                  {...field}
+                                  placeholder=""
+                                />
+                              )}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                              {errors.password?.message}
+                            </Form.Control.Feedback>
+                          </FloatingLabel>
+                        </Form.Group>
+                      </Col>
+                      <Col className="col-auto">
+                        <Button
+                          className="my-3 mx-auto text-light rounded-pill"
+                          variant="accent"
+                          onClick={() => setShowPass(!showPass)}>
+                          {showPass ? (
+                            <BsFillEyeSlashFill />
+                          ) : (
+                            <BsFillEyeFill />
+                          )}
+                        </Button>
+                      </Col>
+                    </Row>
+                    <Row className="mx-auto my-3">
                       <Button
-                        className="my-3 mx-auto text-light rounded-pill"
+                        type="submit"
+                        size="lg"
+                        style={{ width: "50%" }}
+                        className="mx-auto text-light rounded-pill"
                         variant="accent"
-                        onClick={() => setShowPass(!showPass)}>
-                        {showPass ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
+                        disabled={isLoading}>
+                        {isLoading ? (
+                          <Spinner
+                            animation="border"
+                            size="lg"
+                            variant="primary"
+                          />
+                        ) : (
+                          "Login"
+                        )}
                       </Button>
-                    </Col>
-                  </Row>
-                  <Row className="mx-auto my-3">
-                    <Button
-                      type="submit"
-                      size="lg"
-                      style={{ width: "50%" }}
-                      className="mx-auto text-light rounded-pill"
-                      variant="accent"
-                      disabled={isLoading}>
-                      {isLoading ? (
-                        <Spinner
-                          animation="border"
-                          size="lg"
-                          variant="primary"
-                        />
-                      ) : (
-                        "Login"
-                      )}
-                    </Button>
-                  </Row>
-                </Form>
-              )}
-              {loginError !== "" && (
-                <Alert
-                  variant="danger"
-                  dismissible
-                  onClose={() => setLoginError("")}>
-                  {loginError}
-                </Alert>
-              )}
-              <Container className="text-center">
-                <Button
-                  size="lg"
-                  className="text-light rounded-pill"
-                  variant="accent"
-                  onClick={() => toggleShowQR()}>
-                  Login with QR
-                </Button>
-              </Container>
+                    </Row>
+                  </Form>
+                  {loginError !== "" && (
+                    <Alert
+                      variant="danger"
+                      dismissible
+                      onClose={() => setLoginError("")}>
+                      {loginError}
+                    </Alert>
+                  )}
+                </Tab>
+                <Tab
+                  eventKey="QRLogin"
+                  title="QR Login"
+                  onClick={() => setShowQR(true)}>
+                  <Container className="text-center my-5">
+                    <QRCode value={QRToken} />
+                    {QRError !== "" && (
+                      <Alert
+                        variant="danger"
+                        dismissible
+                        onClose={() => setQRError("")}
+                        className="my-3">
+                        {QRError}
+                      </Alert>
+                    )}
+                  </Container>
+                </Tab>
+              </Tabs>
             </Card.Body>
             <Card.Footer>
               Don't Have an Account? <Link to="/register">Register Here</Link>

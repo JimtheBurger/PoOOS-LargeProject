@@ -9,6 +9,8 @@ exports.jwtAuth = (req, res, next) => {
     next();
   } catch (err) {
     res.clearCookie("token");
-    return res.status(200).json({ Error: "redirect" });
+    return res
+      .status(200)
+      .json({ Error: "Login Session Invalid: Please Login" });
   }
 };

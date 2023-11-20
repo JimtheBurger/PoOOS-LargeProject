@@ -253,6 +253,7 @@ app.post("/api/resetPassword", async (req, res, next) => {
   // outgoing: error
   var error = "";
   const { password, token } = req.body;
+  var hash = await bcrypt.hash(password, 8);
 
   try {
     const db = client.db("COP4331Cards");
@@ -262,7 +263,7 @@ app.post("/api/resetPassword", async (req, res, next) => {
       error = "Invalid token";
     } else {
       const filter = { _id: user._id };
-      const newVals = { $set: { PasswordToken: null, Password: password } };
+      const newVals = { $set: { PasswordToken: null, Password: hash } };
       const options = { upsert: false };
       db.collection("Users").updateOne(filter, newVals, options);
     }

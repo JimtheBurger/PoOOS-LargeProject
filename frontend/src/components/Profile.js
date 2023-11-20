@@ -40,8 +40,7 @@ function Profile() {
     <Container>
       <Card
         className="shadow mx-auto my-5"
-        style={{ minWidth: "300px", width: "50%" }}
-      >
+        style={{ minWidth: "300px", width: "50%" }}>
         <CardHeader>
           <strong>{user.User.Username}'s</strong> Profile
         </CardHeader>
@@ -53,20 +52,28 @@ function Profile() {
             <strong>Verified:</strong> {user.User.Verified ? "Yes" : "No"}{" "}
           </p>
           {!user.User.Verified && (
-            <Button
-              onClick={() => resendVerification()}
-              size="lg"
-              style={{ width: "50%" }}
-              className="mx-auto text-light rounded-pill"
-              variant="accent"
-              disabled={isLoading || alreadySent}
-            >
-              {isLoading && (
-                <Spinner animation="border" size="lg" variant="purple" />
-              )}
-              {alreadySent && <BsCheckCircle />}
-              {!isLoading && !alreadySent && "Resend Verification"}
-            </Button>
+            <>
+              <p>
+                A verification email has been sent to the email address above.
+                Please check your email to verify your account. If you cannot
+                find the email, please resend one, or check your spam folder.
+              </p>
+              <div className="text-center">
+                <Button
+                  onClick={() => resendVerification()}
+                  size="lg"
+                  style={{ width: "50%" }}
+                  className="mx-auto text-light rounded-pill"
+                  variant="accent"
+                  disabled={isLoading || alreadySent}>
+                  {isLoading && (
+                    <Spinner animation="border" size="lg" variant="purple" />
+                  )}
+                  {alreadySent && <BsCheckCircle />}
+                  {!isLoading && !alreadySent && "Resend Verification"}
+                </Button>
+              </div>
+            </>
           )}
           {error !== "" && (
             <Alert variant="danger" dismissible onClose={() => setError("")}>
