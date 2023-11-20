@@ -158,13 +158,15 @@ app.post("/api/getLists", jwtAuth, async (req, res) => {
 });
 
 app.post("/api/login", async (req, res, next) => {
-  // incoming: Username, Password
+  // incoming: username, password
   // outgoing: User(obj), Error
   // Also sets cookie named token <- jwt (http only cookie),
 
   var error = "";
   var user = "";
   var lists = "";
+
+  console.log(req.body);
 
   const { username, password } = req.body;
 
