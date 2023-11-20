@@ -806,7 +806,7 @@ app.post("/api/checkLogin", async (req, res) => {
   } else {
     try {
       const db = client.db("COP4331Cards");
-      const token = db.collection("QRToken").findOne({ QRToken: QRToken });
+      const token = db.collection("QRTokens").findOne({ QRToken: QRToken });
       if (token) {
         if (token.UserId !== "") {
           user = await db.collection("Users").findOne({ UserId: token.UserId });
@@ -845,7 +845,7 @@ app.post("/api/mobileQRLogin", async (req, res) => {
   try {
     const db = client.db("COP4331Cards");
 
-    const token = await db.collection("QRToken").findOne({ QRToken: QRToken });
+    const token = await db.collection("QRTokens").findOne({ QRToken: QRToken });
 
     if (!token) {
       error = "QR Token (" + QRToken + ") Expired or Not Found";
@@ -853,7 +853,7 @@ app.post("/api/mobileQRLogin", async (req, res) => {
       const filter = { QRToken: QRToken };
       const newVals = { $set: { UserId: UserId } };
       const options = { upsert: false };
-      await db.collection("QRToken").updateOne(filter, newVals, options);
+      await db.collection("QRTokens").updateOne(filter, newVals, options);
     }
   } catch (e) {
     error = e.toString();
@@ -870,7 +870,7 @@ app.post("/api/newQRToken", async (req, res) => {
 
   try {
     const db = client.db("COP4331Cards");
-    await db.collection("QRToken").insertOne({ QRToken: token, UserId: "" });
+    await db.collection("QRTokens").insertOne({ QRToken: token, UserId: "" });
   } catch (e) {
     error = e.toString();
   }

@@ -85,6 +85,30 @@ function HookLogin() {
     setShowQR(!showQR);
   };
 
+  function timeout(delay) {
+    return new Promise((res) => setTimeout(res, delay));
+  }
+
+  const cycleCheckToken = async () => {
+    const reply = await connectAPI({ QRToken: QRToken }, "checkLogin");
+    if (reply.Error !== "") {
+      setQRError(reply.Error);
+    } else if (reply.User !== "") {
+      //Log in user
+      const now = new Date();
+      setUser({
+        User: reply.User,
+        ListInfo: reply.ListInfo,
+        IsLoggedIn: true,
+        expiry: now.getTime() + 60 * 60 * 1000,
+      });
+      navigate("/profile");
+    } else {
+      timeout(500);
+      cycleCheckToken();
+    }
+  };
+
   //setting qr stuff when enabled
   useEffect(() => {
     async function getQRToken() {
@@ -98,6 +122,7 @@ function HookLogin() {
     }
     if (showQR) {
       getQRToken();
+      cycleCheckToken();
     }
   }, [showQR]);
 
