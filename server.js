@@ -516,7 +516,7 @@ app.post("/api/editList", jwtAuth, async (req, res) => {
 
   var error = "";
   var username = req.Username;
-  var { listId, listName, private, allowedUsers } = req.body;
+  var { listId, listName, isPrivate, allowedUsers } = req.body;
 
   try {
     const db = client.db("COP4331Cards");
@@ -527,7 +527,7 @@ app.post("/api/editList", jwtAuth, async (req, res) => {
     if (list) {
       var filter = { ListId: listId };
       var newVals = {
-        $set: { Name: listName, Private: private, AllowedUsers: allowedUsers },
+        $set: { Name: listName, Private: isPrivate, AllowedUsers: allowedUsers },
       };
       var options = { upsert: false };
       db.collection("Lists").updateOne(filter, newVals, options);
@@ -683,14 +683,14 @@ app.post("/api/addList", jwtAuth, async (req, res) => {
 
   var error = "";
   var username = req.Username;
-  var { listName, private, allowedUsers } = req.body;
+  var { listName, isPrivate, allowedUsers } = req.body;
 
   const usersArr = allowedUsers.split(/\s*(?:,|$)\s*/);
   usersArr.push(username);
 
   const newList = {
     Name: listName,
-    Private: private,
+    Private: isPrivate,
     Owner: username,
     ViewableBy: usersArr,
     Games: [],
