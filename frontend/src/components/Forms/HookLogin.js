@@ -148,7 +148,7 @@ function HookLogin() {
                 <Tab
                   eventKey="Login"
                   title="Login"
-                  onClick={() => setShowQR(false)}>
+                  onSelect={() => setShowQR(false)}>
                   {/*
               Start Form Declaration, noValidate b/c we validate with react-hook-form (RHF) instead.
               Pass formSubmit through RHF handleSubmit hook, which is called when the form is submitted (onSubmit)
@@ -250,7 +250,7 @@ function HookLogin() {
                 <Tab
                   eventKey="QRLogin"
                   title="QR Login"
-                  onClick={() => setShowQR(true)}>
+                  onSelect={() => setShowQR(true)}>
                   <Container className="text-center my-5">
                     <QRCode value={QRToken} />
                     {QRError !== "" && (
