@@ -858,25 +858,27 @@ app.post("/api/mobileQRLogin", async (req, res) => {
   } catch (e) {
     error = e.toString();
   }
-  res.status(200).json({ QRToken: token });
+  res.status(200).json({ Error: error });
 });
 
 app.post("/api/newQRToken", async (req, res) => {
   //incoming : nothing
-  //outgoing : QRToken
+  //outgoing : QRToken, Error
 
   var token = crypto.randomBytes(64).toString("hex");
+  error = "";
+
   try {
     const db = client.db("COP4331Cards");
     await db.collection("QRToken").insertOne({ QRToken: token, UserId: "" });
-    this.setTimeout(
-      () => db.collection("QRToken").deleteOne({ QRToken: token }),
-      60 * 5 * 1000
-    );
+    setTimeout(60 * 5 * 1000, () => {
+      db.collection("QRToken").deleteOne({ QRToken: token });
+      console.log("Deleted QRToken");
+    });
   } catch (e) {
     error = e.toString();
   }
-  res.status(200).json({ QRToken: token });
+  res.status(200).json({ QRToken: token, Error: error });
 });
 
 //search ALL games based on name AND genre

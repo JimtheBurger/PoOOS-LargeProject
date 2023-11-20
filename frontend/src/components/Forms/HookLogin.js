@@ -12,11 +12,12 @@ import {
 } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import { connectAPI } from "./connectAPI.js";
 import { Link, useNavigate } from "react-router-dom";
 import AppContext from "../../context/AppContext.js";
+import QRCode from "react-qr-code";
 
 function HookLogin() {
   //yup validation schema
@@ -75,6 +76,31 @@ function HookLogin() {
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
 
+  const [QRError, setQRError] = useState("");
+
+  //mobile logon qr stuff
+  const [QRToken, setQRToken] = useState("");
+  const [showQR, setShowQR] = useState("");
+  const toggleShowQR = () => {
+    setShowQR(!showQR);
+  };
+
+  //setting qr stuff when enabled
+  useEffect(() => {
+    async function getQRToken() {
+      const token = await connectAPI({ Empty: "empty" }, "newQRToken");
+      console.log(token);
+      if (token.Error !== "") {
+        setQRError(token.Error);
+      } else {
+        setQRToken(token.QRToken);
+      }
+    }
+    if (showQR) {
+      getQRToken();
+    }
+  }, [showQR]);
+
   //returned object
   return (
     <Container className="my-auto">
@@ -91,81 +117,102 @@ function HookLogin() {
               Start Form Declaration, noValidate b/c we validate with react-hook-form (RHF) instead.
               Pass formSubmit through RHF handleSubmit hook, which is called when the form is submitted (onSubmit)
               */}
-              <Form noValidate onSubmit={handleSubmit(formSubmit)}>
-                <Row>
-                  {/* Username section of the form*/}
-                  <Form.Group controlId="username" className="my-2">
-                    <FloatingLabel label="Username">
-                      <Controller
-                        name="username"
-                        control={control}
-                        render={({ field }) => (
-                          <Form.Control
-                            isInvalid={errors.username}
-                            isValid={touchedFields.username && !errors.username}
-                            type="text"
-                            {...field}
-                            placeholder=""
-                          />
-                        )}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.username?.message}
-                      </Form.Control.Feedback>
-                    </FloatingLabel>
-                  </Form.Group>
-                </Row>
-                <Row>
-                  <Col>
-                    {/* Password section of the form*/}
+              {showQR ? (
+                <Container className="text-center my-5">
+                  <QRCode value={QRToken} />
+                  {QRError !== "" && (
+                    <Alert
+                      variant="danger"
+                      dismissible
+                      onClose={() => setQRError("")}
+                      className="my-3">
+                      {QRError}
+                    </Alert>
+                  )}
+                </Container>
+              ) : (
+                <Form noValidate onSubmit={handleSubmit(formSubmit)}>
+                  <Row>
+                    {/* Username section of the form*/}
                     <Form.Group controlId="username" className="my-2">
-                      <FloatingLabel label="Password">
+                      <FloatingLabel label="Username">
                         <Controller
-                          name="password"
+                          name="username"
                           control={control}
                           render={({ field }) => (
                             <Form.Control
-                              isInvalid={errors.password}
+                              isInvalid={errors.username}
                               isValid={
-                                touchedFields.password && !errors.password
+                                touchedFields.username && !errors.username
                               }
-                              type={showPass ? "text" : "password"}
+                              type="text"
                               {...field}
                               placeholder=""
                             />
                           )}
                         />
                         <Form.Control.Feedback type="invalid">
-                          {errors.password?.message}
+                          {errors.username?.message}
                         </Form.Control.Feedback>
                       </FloatingLabel>
                     </Form.Group>
-                  </Col>
-                  <Col className="col-auto">
+                  </Row>
+                  <Row>
+                    <Col>
+                      {/* Password section of the form*/}
+                      <Form.Group controlId="username" className="my-2">
+                        <FloatingLabel label="Password">
+                          <Controller
+                            name="password"
+                            control={control}
+                            render={({ field }) => (
+                              <Form.Control
+                                isInvalid={errors.password}
+                                isValid={
+                                  touchedFields.password && !errors.password
+                                }
+                                type={showPass ? "text" : "password"}
+                                {...field}
+                                placeholder=""
+                              />
+                            )}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.password?.message}
+                          </Form.Control.Feedback>
+                        </FloatingLabel>
+                      </Form.Group>
+                    </Col>
+                    <Col className="col-auto">
+                      <Button
+                        className="my-3 mx-auto text-light rounded-pill"
+                        variant="accent"
+                        onClick={() => setShowPass(!showPass)}>
+                        {showPass ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
+                      </Button>
+                    </Col>
+                  </Row>
+                  <Row className="mx-auto my-3">
                     <Button
-                      className="my-3 mx-auto text-light rounded-pill"
+                      type="submit"
+                      size="lg"
+                      style={{ width: "50%" }}
+                      className="mx-auto text-light rounded-pill"
                       variant="accent"
-                      onClick={() => setShowPass(!showPass)}>
-                      {showPass ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
+                      disabled={isLoading}>
+                      {isLoading ? (
+                        <Spinner
+                          animation="border"
+                          size="lg"
+                          variant="primary"
+                        />
+                      ) : (
+                        "Login"
+                      )}
                     </Button>
-                  </Col>
-                </Row>
-                <Row className="mx-auto my-3">
-                  <Button
-                    type="submit"
-                    size="lg"
-                    style={{ width: "50%" }}
-                    className="mx-auto text-light rounded-pill"
-                    variant="accent"
-                    disabled={isLoading}>
-                    {isLoading ? (
-                      <Spinner animation="border" size="lg" variant="primary" />
-                    ) : (
-                      "Login"
-                    )}
-                  </Button>
-                </Row>
-              </Form>
+                  </Row>
+                </Form>
+              )}
               {loginError !== "" && (
                 <Alert
                   variant="danger"
@@ -174,6 +221,15 @@ function HookLogin() {
                   {loginError}
                 </Alert>
               )}
+              <Container className="text-center">
+                <Button
+                  size="lg"
+                  className="text-light rounded-pill"
+                  variant="accent"
+                  onClick={() => toggleShowQR()}>
+                  Login with QR
+                </Button>
+              </Container>
             </Card.Body>
             <Card.Footer>
               Don't Have an Account? <Link to="/register">Register Here</Link>
