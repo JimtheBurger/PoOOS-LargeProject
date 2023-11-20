@@ -604,8 +604,6 @@ app.post("/api/removeGameFromList", jwtAuth, async (req, res) => {
   var username = req.Username;
   var { ListId, AppID } = req.body;
 
-  console.log(ListId, AppID);
-
   if (!ListId) {
     error = "No List Specified";
   } else if (!AppID) {
@@ -740,6 +738,45 @@ app.post("/api/addList", jwtAuth, async (req, res) => {
         error = e.toString();
       }
     }
+  }
+  res.status(200).json({ Error: error });
+});
+
+app.post("/api/deleteList", jwtAuth, async (req, res) => {
+  //incoming jwt, ListID
+  //outgoing Error
+
+  var listId = req.body.ListId;
+  var username = req.Username;
+  var error = "";
+
+  try {
+    const db = client.db("COP4331Cards");
+    const user = await db.collection("Users").findOne({ Username: username });
+    if (!user) {
+      error = "Username associated with token invalid";
+    } else {
+      if (!user.Verified) {
+        error = "You are unverified, how did you manage to do this?";
+      } else {
+        const list = await db.collection("Lists").findOne({ ListId: listId });
+        if (!list) {
+          error = "Invalid ListId associated with request.";
+        } else {
+          if (list.Owner !== username) {
+            error = "You do not own this list";
+          } else {
+            await db.collection("Lists").deleteOne({ ListId: listId });
+            var filter = { Username: username };
+            var newVals = { $pull: { Lists: listId } };
+            var options = { upsert: false };
+            await db.collection("Users").updateOne(filter, newVals, options);
+          }
+        }
+      }
+    }
+  } catch (e) {
+    error = e.toString();
   }
   res.status(200).json({ Error: error });
 });

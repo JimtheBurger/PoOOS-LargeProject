@@ -1,11 +1,13 @@
-import { Stack, Card, Spinner } from "react-bootstrap";
+import { Stack, Card, Spinner, Container, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { connectAPI } from "../Forms/connectAPI";
+import DeleteListButton from "../Forms/ListForms/DeleteListButton";
 
 export default function ListMenu() {
   const [listInfo, setListInfo] = useState([]);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -21,7 +23,7 @@ export default function ListMenu() {
     }
     getLists();
     setIsLoading(false);
-  }, []);
+  }, [error, success]);
 
   return (
     <Card
@@ -29,14 +31,35 @@ export default function ListMenu() {
       style={{ minWidth: "300px", width: "50%" }}>
       <Card.Header>Your Lists</Card.Header>
       <Card.Body>
+        {error !== "" && (
+          <Alert variant="danger" dismissible onClose={() => setError("")}>
+            {error}
+          </Alert>
+        )}
+        {success !== "" && (
+          <Alert variant="success" dismissible onClose={() => setSuccess("")}>
+            {success}
+          </Alert>
+        )}
         {isLoading && <Spinner animation="border" size="lg" variant="accent" />}
         {!isLoading && listInfo.length > 0 ? (
           <Stack gap={1}>
             {listInfo.map(({ ListId, Name }, index) => {
               return (
-                <a key={index} href={"/list/" + ListId.toString()}>
-                  {Name}
-                </a>
+                <Container
+                  key={"Container-" + index}
+                  className="d-flex justify-content-between">
+                  <a key={"List-" + index} href={"/list/" + ListId.toString()}>
+                    {Name}
+                  </a>
+                  <DeleteListButton
+                    key={"DelButton-" + index}
+                    listId={ListId}
+                    ListName={Name}
+                    setError={setError}
+                    setSuccess={setSuccess}
+                  />
+                </Container>
               );
             })}
           </Stack>
