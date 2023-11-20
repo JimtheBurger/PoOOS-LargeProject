@@ -871,10 +871,6 @@ app.post("/api/newQRToken", async (req, res) => {
   try {
     const db = client.db("COP4331Cards");
     await db.collection("QRToken").insertOne({ QRToken: token, UserId: "" });
-    setTimeout(60 * 5 * 1000, () => {
-      db.collection("QRToken").deleteOne({ QRToken: token });
-      console.log("Deleted QRToken");
-    });
   } catch (e) {
     error = e.toString();
   }
