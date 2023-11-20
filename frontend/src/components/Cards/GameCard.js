@@ -44,7 +44,7 @@ function GameCard(props) {
       </Card.Body>
 
       {user.IsLoggedIn && (
-        <Card.Footer className="d-flex justify-content-between">
+        <Card.Footer className="d-flex justify-content-around">
           <AddButton appid={game.AppID} />
           {user.IsLoggedIn && user.User.Username === props.owner && (
             <RemoveButton

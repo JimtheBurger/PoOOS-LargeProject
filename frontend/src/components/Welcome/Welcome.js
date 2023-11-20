@@ -64,33 +64,30 @@ function Welcome() {
     <Container>
       <Row style={{ marginTop: "60px" }} className="justify-content-center">
         <Col md={6}>
-          <Card
-            className="text-center"
-            style={{ backgroundColor: "rgba(19, 5, 51, .1)" }}
-          >
+          <Card className="text-center shadow">
             <Card.Body>
               <Card.Title
                 className="tagline welcome-title"
-                style={{ fontSize: "24px" }}
-              >
+                style={{ fontSize: "24px" }}>
                 All Your Favorite Games, In One Convenient Place
               </Card.Title>
               <Card.Text
                 className="detail-text"
-                style={{ fontSize: "17px", fontWeight: "500" }}
-              >
+                style={{ fontSize: "17px", fontWeight: "500" }}>
                 Create and share personalized game lists among friends,
                 effortlessly monitor your played and unexplored games with
                 MySteamList!
               </Card.Text>
+              <div className="bg-purple text-purple">
+                <hr style={{ height: "2px" }} />
+              </div>
               <div className="button-container">
                 {!user.IsLoggedIn && (
                   <Button
                     href="register"
-                    variant="light"
-                    className="mr-2"
-                    style={{ border: "1px solid black" }}
-                  >
+                    variant="accent"
+                    size="lg"
+                    className="mx-auto text-light rounded-pill">
                     <strong>Join Now</strong>
                   </Button>
                 )}

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import ListDisplay from "./ListDisplay";
 import { connectAPI } from "../Forms/connectAPI";
 import ListSearch from "./ListSearch";
-import { Spinner } from "react-bootstrap";
+import { Spinner, Alert, Container } from "react-bootstrap";
 
 function ListHandler() {
   const [games, setGames] = useState([]);
@@ -24,6 +24,8 @@ function ListHandler() {
   const [search, setSearch] = useState("");
   const [genre, setGenre] = useState("");
 
+  const [error, setError] = useState("");
+
   useEffect(() => {
     setIsLoading(true);
     async function getGames() {
@@ -33,10 +35,10 @@ function ListHandler() {
           setGames(reply.Games);
           setListInfo(reply.ListInfo);
         } else {
-          console.log(reply.Error);
+          setError(reply.Error);
         }
       } else {
-        console.log("No list Id");
+        setError("No ListId specified");
       }
     }
     getGames();
@@ -57,11 +59,19 @@ function ListHandler() {
 
   return (
     <>
-      <ListSearch setSearch={setSearch} setGenre={setGenre} />
-      {isLoading ? (
-        <Spinner animation="border" size="lg" variant="accent" />
+      {error !== "" ? (
+        <Container className="my-5" style={{ minWidth: "300px", width: "50%" }}>
+          <Alert variant="danger">{error}</Alert>
+        </Container>
       ) : (
-        <ListDisplay games={finalGames} listInfo={listInfo} />
+        <>
+          <ListSearch setSearch={setSearch} setGenre={setGenre} />
+          {isLoading ? (
+            <Spinner animation="border" size="lg" variant="accent" />
+          ) : (
+            <ListDisplay games={finalGames} listInfo={listInfo} />
+          )}{" "}
+        </>
       )}
     </>
   );

@@ -145,9 +145,7 @@ function HookLogin() {
             className="shadow mx-auto my-5"
             style={{ minWidth: "300px", width: "50%" }}>
             {/* Bootstrap card with header and body*/}
-            <Card.Header>
-              {!showQR ? "Login Options" : "Showing QR"}
-            </Card.Header>
+            <Card.Header>Login Options</Card.Header>
             <Card.Body>
               <Tabs
                 defaultActiveKey={1}
@@ -258,6 +256,9 @@ function HookLogin() {
                   title="QR Login"
                   onSelect={() => setShowQR(true)}>
                   <Container className="text-center my-5">
+                    <p className="my-3">
+                      Scan the QR code from the MySteamList mobile app to login.
+                    </p>
                     <QRCode value={QRToken} />
                     {QRError !== "" && (
                       <Alert
