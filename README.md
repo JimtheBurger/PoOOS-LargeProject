@@ -1,8 +1,6 @@
 # PoOOS-LargeProject
 Large Project for Processes of Object Oriented Software (Group 4)
 
-This is ONLY finished for MERN B, MERN C has had errors and isn't working.
-
 The default branch is "master" as that is what Heroku uses. Feel free to edit.
 
 To have this working on your computer you will need
