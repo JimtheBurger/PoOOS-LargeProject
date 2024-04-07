@@ -14,3 +14,15 @@ To test the express server, run the following command:
 `npx jest testing/server.test.js --forceExit`
 
 Make sure you've already run `npm install` and have your .env set up
+
+# Contributor Information
+Jude Gagnier - Project Manager
+James Allen - Database Admin
+Jacob Riesterer - Mobile Frontend, Web Frontend Developer
+Jack Wilson - Mobile Frontend, API Developer
+Jonathan Luong - API Developer
+Peyton Miller - Web Frontend Developer
+Sam Cooper - API Developer
+
+Project initiated: October 2nd, 2023
+Project presented: November 20th, 2023
